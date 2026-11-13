@@ -15,6 +15,19 @@ const optionalList = <T extends z.ZodType>(item: T) =>
     return items.length ? items : undefined;
   }, z.array(item).optional());
 
+/* "[PLACEHOLDER]" (or any "[...]") means "not filled in yet" — treated as empty. */
+const isPlaceholder = (value: unknown) => typeof value === 'string' && /^\s*\[.*\]\s*$/.test(value);
+const optionalUrl = z.preprocess(
+  (v) => (blank(v) === undefined || isPlaceholder(v) ? undefined : v),
+  z.url().optional(),
+);
+const placeholderFreeList = <T extends z.ZodType>(item: T) =>
+  z.preprocess((value) => {
+    if (!Array.isArray(value)) return undefined;
+    const items = value.filter((v) => blank(v) !== undefined && !isPlaceholder(v));
+    return items.length ? items : undefined;
+  }, z.array(item).optional());
+
 const link = z.object({
   label: z.string(),
   url: z.url(),
@@ -39,6 +52,17 @@ const home = defineCollection({
     secondary_cta: optional(cta),
     show_now_researching: optional(z.boolean()),
     tagline: optional(z.string()),
+    // Copy for the Demos group (home page + /products)
+    demos: optional(
+      z.object({
+        show_on_home: optional(z.boolean()),
+        label: z.string(),
+        heading: z.string(),
+        text: z.string(),
+        note: z.string(),
+        link_label: z.string(),
+      }),
+    ),
     sections: z.object({
       research: z.object({ summary: z.string() }),
       products: z.object({
@@ -117,4 +141,27 @@ const team = defineCollection({
     }),
 });
 
-export const collections = { home, contact, research, products, team };
+const demos = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/demos' }),
+  schema: ({ image }) =>
+    z.object({
+      name: z.string(),
+      tagline: z.string(),
+      problem: z.string(),
+      howItWorks: z.array(z.string()).min(3).max(5),
+      status: z.enum(['Working demo', 'Prototype', 'In development']),
+      // Shown only under the label "Illustrative example"
+      exampleOutput: optional(z.string()),
+      demoUrl: optionalUrl,
+      videoUrl: optionalUrl,
+      screenshots: placeholderFreeList(image()),
+      stack: placeholderFreeList(z.string()),
+      // Which built-in animated illustration to show
+      illustration: optional(z.enum(['rto', 'voice', 'ops', 'competitor', 'creative', 'cfo'])),
+      featured: z.boolean().default(false),
+      order: z.coerce.number().default(99),
+      draft: z.boolean().default(false),
+    }),
+});
+
+export const collections = { home, contact, research, products, team, demos };

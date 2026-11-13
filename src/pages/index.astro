@@ -1,8 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getHome, getResearch, href, url } from '../lib/content';
+import DemoGrid from '../components/demos/DemoGrid.astro';
+import { getFeaturedDemos, getHome, getResearch, href, url } from '../lib/content';
 
 const home = await getHome();
+const demoCopy = home.demos;
+const featured = demoCopy?.show_on_home ? await getFeaturedDemos(3) : [];
 
 // Split the headline so the chosen highlight phrase can be styled,
 // and each word can animate in one after another.
@@ -33,7 +36,7 @@ const now = home.show_now_researching
 const description = home.subline || home.headline;
 ---
 
-<Base description={description}>
+<Base description={description} demos={featured.length > 0}>
   <section class="hero" aria-labelledby="headline" style={`--words: ${wordCount}`}>
     <div class="aurora" aria-hidden="true">
       <span class="blob b1"></span>
@@ -104,6 +107,32 @@ const description = home.subline || home.headline;
       )
     }
   </section>
+
+  {
+    demoCopy && featured.length > 0 && (
+      <section class="container featured" aria-labelledby="featured-title">
+        <div class="featured-head">
+          <div>
+            <p class="label" data-section="products">
+              {demoCopy.label}
+            </p>
+            <h2 id="featured-title" class="featured-title">
+              {demoCopy.heading}
+            </h2>
+            <p class="featured-text">{demoCopy.text}</p>
+          </div>
+          <a class="text-link all" href={url('/products/#demos')}>
+            {demoCopy.link_label}
+            <span class="arrow" aria-hidden="true">
+              →
+            </span>
+          </a>
+        </div>
+        <DemoGrid demos={featured} reveal={false} />
+        <p class="featured-note">{demoCopy.note}</p>
+      </section>
+    )
+  }
 </Base>
 
 <style>
@@ -206,6 +235,54 @@ const description = home.subline || home.headline;
     gap: var(--s-2) var(--s-5);
     margin-top: var(--s-5);
     animation: rise 900ms calc(420ms + var(--words) * 70ms) var(--ease-out) both;
+  }
+
+  /* ---------- Featured demos ---------- */
+
+  .featured {
+    padding-block: var(--s-10) var(--s-12);
+    /* below the fold: skip layout and paint until it's about to scroll into view */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1400px;
+  }
+
+  .featured-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-3) var(--s-6);
+    margin-bottom: var(--s-8);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--hairline);
+  }
+
+  .featured-head > div {
+    max-width: 40rem;
+  }
+
+  .featured-title {
+    margin-top: var(--s-2);
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+  }
+
+  .featured-text {
+    margin-top: var(--s-2);
+    color: var(--muted);
+  }
+
+  .featured .all {
+    color: var(--text);
+    flex: none;
+  }
+
+  .featured-note {
+    margin-top: var(--s-8);
+    max-width: 46rem;
+    font-size: var(--text-small);
+    color: var(--muted);
   }
 
   /* ---------- "Now researching" ticker ---------- */

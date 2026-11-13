@@ -60,6 +60,32 @@ The **Page intros** on the same screen are the sentence shown under the title on
 
 ---
 
+## Add or update a demo
+
+Demos live under **Products** on the site (a "Demos" group on the Products page, and a page each at `/products/demos/…`). The home page shows three of them.
+
+1. Click **Demos**. Open one to edit it, or click **Add an entry**.
+2. Fill in:
+   - **Name** and **Tagline**: the one-line summary on the card.
+   - **The problem**: one or two sentences.
+   - **How it works**: three to five short steps, one per entry.
+   - **Status**:
+     - **In development**: not yet usable.
+     - **Prototype**: early version.
+     - **Working demo**: someone can try it.
+   - **Example output** (optional): made-up sample output. It's always shown under the label "Illustrative example".
+   - **Demo link** / **Video link**: paste a full `https://` address to add a **Try it** button or a **Watch video** link. While a field says `[PLACEHOLDER]` or is empty, no button is shown.
+   - **Screenshots**: upload up to six images.
+   - **Stack**: the tools used, one per entry (optional).
+   - **Animated illustration**: which of the six built-in animations to show. Leave it empty and the first screenshot is used instead.
+   - **Featured on home page**: the home page shows three demos, featured ones first, then by **Order**.
+   - **Order**: 1 comes first.
+3. Click **Save**.
+
+**Keep demos honest.** Don't describe a demo as client work or a live product, and only use made-up numbers in examples and screenshots. The site already labels the illustrations "Illustrative sample data" and adds a note under every demo list. You can edit that note under **Home page → Demos section**, where you can also hide the demos from the home page.
+
+---
+
 ## Add a team member (with a photo)
 
 1. Click **Team** → **Add an entry**.

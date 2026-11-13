@@ -1,0 +1,190 @@
+---
+/* Autonomous Operations Agent: alerts slide into a feed; the first proposed fix gets approved with one tap.
+   Resting state = all alerts shown, first fix approved. */
+const rows = [
+  { y: 30, dot: 'var(--contact-ink)', title: 'Stock running low', sub: 'SKU 2241 · 6 left · reorder 50?' },
+  { y: 76, dot: 'var(--products-ink)', title: 'Shipments stuck at hub', sub: '12 orders · courier delayed' },
+  { y: 122, dot: 'var(--research-ink)', title: 'Refund requests rising', sub: 'Size complaints on 1 product' },
+];
+---
+
+<svg class="art" viewBox="0 0 320 200" aria-hidden="true" focusable="false">
+  <text class="m xs" x="16" y="20">OPERATIONS AGENT · 3 ISSUES FOUND</text>
+
+  {
+    rows.map((r, i) => (
+      <g class="row" style={`animation-delay: ${i * 0.35}s`}>
+        <rect class="card" x="16" y={r.y} width="288" height="38" rx="6" />
+        <circle cx="32" cy={r.y + 19} r="4" style={`fill: ${r.dot}`} />
+        <text class="t strong" x="44" y={r.y + 16}>
+          {r.title}
+        </text>
+        <text class="m s" x="44" y={r.y + 29}>
+          {r.sub}
+        </text>
+      </g>
+    ))
+  }
+
+  <!-- one-tap approval on the first issue -->
+  <g class="approve">
+    <rect class="btn" x="230" y="39" width="64" height="20" rx="10"></rect>
+    <text class="btn-t" x="262" y="52.5" text-anchor="middle">Approve</text>
+  </g>
+  <circle class="tap" cx="262" cy="49" r="14"></circle>
+  <g class="approved">
+    <rect class="btn-ok" x="226" y="39" width="72" height="20" rx="10"></rect>
+    <path class="tick" d="M236 49.2l2.4 2.4 4.6-5"></path>
+    <text class="ok-t" x="270" y="52.5" text-anchor="middle">Approved</text>
+  </g>
+
+  <text class="m s" x="16" y="186">A person approves every fix before anything changes.</text>
+</svg>
+
+<style>
+  .art {
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-family: var(--font-sans);
+  }
+
+  .t {
+    font-size: 10px;
+    fill: var(--text);
+  }
+
+  .strong {
+    font-weight: 500;
+  }
+
+  .m {
+    fill: var(--muted);
+  }
+
+  .s {
+    font-size: 9px;
+  }
+
+  .xs {
+    font-size: 8px;
+    letter-spacing: 0.08em;
+  }
+
+  .card {
+    fill: #ffffff;
+    stroke: var(--hairline);
+  }
+
+  .row {
+    animation: ops-row 10s cubic-bezier(0.2, 0.7, 0.2, 1) infinite both;
+  }
+
+  .btn {
+    fill: #ffffff;
+    stroke: var(--text);
+  }
+
+  .btn-t {
+    font-size: 9.5px;
+    font-weight: 500;
+    fill: var(--text);
+  }
+
+  .approve {
+    opacity: 0;
+    animation: ops-before 10s ease infinite both;
+  }
+
+  .approved {
+    animation: ops-after 10s ease infinite both;
+  }
+
+  .btn-ok {
+    fill: var(--team-ink);
+  }
+
+  .tick {
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .ok-t {
+    font-size: 9.5px;
+    font-weight: 500;
+    fill: #ffffff;
+  }
+
+  .tap {
+    fill: none;
+    stroke: var(--text);
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: ops-tap 10s ease-out infinite both;
+  }
+
+  @keyframes ops-row {
+    0% {
+      opacity: 0;
+      transform: translateX(18px);
+    }
+    8%,
+    92% {
+      opacity: 1;
+      transform: none;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes ops-before {
+    0%,
+    10% {
+      opacity: 0;
+    }
+    16%,
+    44% {
+      opacity: 1;
+    }
+    48%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes ops-after {
+    0%,
+    44% {
+      opacity: 0;
+    }
+    48%,
+    92% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes ops-tap {
+    0%,
+    40% {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+    44% {
+      opacity: 0.45;
+      transform: scale(1);
+    }
+    54%,
+    100% {
+      opacity: 0;
+      transform: scale(1.5);
+    }
+  }
+</style>

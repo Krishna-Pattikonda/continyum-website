@@ -1,0 +1,136 @@
+---
+/* Vernacular Voice Agent: a live call waveform while the language label cycles Hindi → Telugu → Tamil,
+   with the call logged below. Resting state = Hindi label, full waveform, call logged. */
+const heights = [10, 18, 26, 40, 30, 52, 36, 24, 44, 60, 38, 28, 48, 66, 42, 30, 54, 36, 22, 40, 30, 46, 26, 18, 30, 20, 14, 10];
+const bars = heights.map((h, i) => ({ x: 46 + i * 8.6, y: 96 - h / 2, h, delay: -(i * 0.13).toFixed(2) }));
+---
+
+<svg class="art" viewBox="0 0 320 200" aria-hidden="true" focusable="false">
+  <!-- language chip -->
+  <rect class="chip" x="96" y="18" width="128" height="26" rx="13"></rect>
+  <circle class="live" cx="112" cy="31" r="3.5"></circle>
+  <text class="lang l1" x="168" y="34.5" text-anchor="middle">Hindi · हिन्दी</text>
+  <text class="lang l2" x="168" y="34.5" text-anchor="middle">Telugu · తెలుగు</text>
+  <text class="lang l3" x="168" y="34.5" text-anchor="middle">Tamil · தமிழ்</text>
+
+  <!-- waveform -->
+  {
+    bars.map((b) => (
+      <rect class="bar" x={b.x} y={b.y} width="4.6" height={b.h} rx="2.3" style={`animation-delay: ${b.delay}s`} />
+    ))
+  }
+
+  <!-- call log -->
+  <rect class="log" x="46" y="140" width="232" height="40" rx="6"></rect>
+  <circle class="ok" cx="64" cy="160" r="8"></circle>
+  <path class="tick" d="M60.5 160.2l2.4 2.4 4.6-5"></path>
+  <text class="t strong" x="80" y="157">Order confirmed</text>
+  <text class="m" x="80" y="170">Summary logged · deliver after 6 pm</text>
+</svg>
+
+<style>
+  .art {
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-family: var(--font-sans);
+  }
+
+  .chip {
+    fill: #ffffff;
+    stroke: var(--hairline);
+  }
+
+  .live {
+    fill: var(--research-ink);
+    animation: voice-live 1.6s ease-in-out infinite both;
+  }
+
+  .lang {
+    font-size: 10px;
+    font-weight: 500;
+    fill: var(--text);
+    opacity: 0;
+    animation: voice-lang 9s ease infinite both;
+  }
+
+  .l1 {
+    opacity: 1;
+  }
+
+  .l2 {
+    animation-delay: -6s;
+  }
+
+  .l3 {
+    animation-delay: -3s;
+  }
+
+  .bar {
+    fill: var(--research-ink);
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: voice-bar 1.3s ease-in-out infinite alternate both;
+  }
+
+  .log {
+    fill: #ffffff;
+    stroke: var(--hairline);
+  }
+
+  .ok {
+    fill: var(--team-ink);
+  }
+
+  .tick {
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .t {
+    font-size: 10px;
+    fill: var(--text);
+  }
+
+  .strong {
+    font-weight: 500;
+  }
+
+  .m {
+    font-size: 9px;
+    fill: var(--muted);
+  }
+
+  @keyframes voice-bar {
+    from {
+      transform: scaleY(0.3);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+
+  @keyframes voice-live {
+    50% {
+      opacity: 0.25;
+    }
+  }
+
+  /* each label is visible for one third of the cycle */
+  @keyframes voice-lang {
+    0%,
+    28% {
+      opacity: 1;
+    }
+    33%,
+    95% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+</style>

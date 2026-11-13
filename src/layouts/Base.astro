@@ -5,6 +5,7 @@ import '../styles/global.css';
 import serifFont from '../assets/fonts/newsreader-latin-400-normal.woff2?url';
 import serifItalicFont from '../assets/fonts/newsreader-latin-400-italic.woff2?url';
 import sansFont from '../assets/fonts/inter-latin-400-normal.woff2?url';
+import sansMediumFont from '../assets/fonts/inter-latin-500-normal.woff2?url';
 
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -15,9 +16,11 @@ interface Props {
   description: string;
   type?: 'website' | 'article';
   noindex?: boolean;
+  /** Page shows demo illustrations: hold them paused from the first frame until they scroll into view. */
+  demos?: boolean;
 }
 
-const { title, description, type = 'website', noindex = false } = Astro.props;
+const { title, description, type = 'website', noindex = false, demos = false } = Astro.props;
 const fullTitle = title ? `${title} — Continyum` : 'Continyum';
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(url('/og-image.png'), Astro.site).href;
@@ -34,6 +37,13 @@ const isHome = path === '/' || path === '';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
+    {
+      demos && (
+        <script is:inline>
+          if ('IntersectionObserver' in window) document.documentElement.classList.add('demo-js');
+        </script>
+      )
+    }
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
@@ -45,6 +55,7 @@ const isHome = path === '/' || path === '';
     <link rel="preload" href={serifFont} as="font" type="font/woff2" crossorigin />
     {isHome && <link rel="preload" href={serifItalicFont} as="font" type="font/woff2" crossorigin />}
     <link rel="preload" href={sansFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={sansMediumFont} as="font" type="font/woff2" crossorigin />
 
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content="Continyum" />

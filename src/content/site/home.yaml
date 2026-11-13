@@ -12,6 +12,13 @@ secondary_cta:
 # Shows the newest "In progress" research paper as a live ticker on the home page.
 show_now_researching: true
 tagline: Your partner in enterprise AI and frontier technology.
+demos:
+  show_on_home: true
+  label: Demos
+  heading: See what we build.
+  text: Demonstrations of the AI systems we design for growing commerce businesses, from cash-on-delivery risk to true profit per order.
+  note: These demos are built by Continyum to show what's possible. They are not client deployments, and every number shown is illustrative sample data.
+  link_label: See all demos
 sections:
   research:
     summary: |-

@@ -309,12 +309,14 @@ a:hover {
 }
 
 .status[data-status='Published'],
-.status[data-status='Live'] {
+.status[data-status='Live'],
+.status[data-status='Working demo'] {
   --status: var(--team-ink);
 }
 
 .status[data-status='Preprint'],
-.status[data-status='Pilot'] {
+.status[data-status='Pilot'],
+.status[data-status='Prototype'] {
   --status: var(--research-ink);
 }
 

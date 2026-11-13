@@ -1,11 +1,14 @@
 ---
 import Base from '../../layouts/Base.astro';
 import EntryList from '../../components/EntryList.astro';
-import { getContact, getHome, getProducts, url } from '../../lib/content';
+import DemoGrid from '../../components/demos/DemoGrid.astro';
+import { getContact, getDemos, getHome, getProducts, url } from '../../lib/content';
 
 const home = await getHome();
 const contact = await getContact();
 const products = await getProducts();
+const demos = await getDemos();
+const copy = home.demos;
 
 const rows = products.map((p) => ({
   href: url(`/products/${p.id}`),
@@ -14,7 +17,7 @@ const rows = products.map((p) => ({
   status: p.data.status,
 }));
 
-// While nothing is published, show the "coming soon" screen instead of an empty list.
+// While no product is published, show the "coming soon" block below the demos.
 const soon = home.sections.products.coming_soon;
 const comingSoon = products.length === 0;
 const headline = soon.headline.replace(/\.$/, '');
@@ -22,9 +25,31 @@ const endsWithDot = soon.headline.endsWith('.');
 const notify = `mailto:${contact.email}?subject=${encodeURIComponent('Notify me about Continyum products')}`;
 ---
 
-<Base title="Products" description={comingSoon ? soon.text : home.sections.products.summary}>
+<Base title="Products" description={home.sections.products.summary} demos={demos.length > 0}>
+  <div class="container page head">
+    <h1 class="page-title dot">Products</h1>
+    <p class="page-intro">{home.sections.products.summary}</p>
+    {!comingSoon && <EntryList rows={rows} />}
+  </div>
+
   {
-    comingSoon ? (
+    demos.length > 0 && copy && (
+      <section id="demos" class="container demos" aria-labelledby="demos-title">
+        <div class="demos-head reveal">
+          <p class="label">{copy.label}</p>
+          <h2 id="demos-title" class="demos-title">
+            {copy.heading}
+          </h2>
+          <p class="demos-text">{copy.text}</p>
+        </div>
+        <DemoGrid demos={demos} />
+        <p class="demos-note">{copy.note}</p>
+      </section>
+    )
+  }
+
+  {
+    comingSoon && (
       <section class="soon container" aria-labelledby="soon-title">
         <div class="orbits" aria-hidden="true">
           <span class="orbit o1">
@@ -38,15 +63,15 @@ const notify = `mailto:${contact.email}?subject=${encodeURIComponent('Notify me 
           </span>
         </div>
 
-        <div class="soon-inner">
+        <div class="soon-inner reveal">
           <p class="pill">
             <span class="pulse" aria-hidden="true" />
             In development
           </p>
-          <h1 id="soon-title" class="soon-title">
+          <h2 id="soon-title" class="soon-title">
             {headline}
             {endsWithDot && <span class="dot">.</span>}
-          </h1>
+          </h2>
           <p class="soon-text">{soon.text}</p>
           <a class="text-link notify" href={notify}>
             {soon.button}
@@ -56,24 +81,61 @@ const notify = `mailto:${contact.email}?subject=${encodeURIComponent('Notify me 
           </a>
         </div>
       </section>
-    ) : (
-      <div class="container page">
-        <h1 class="page-title dot">Products</h1>
-        <p class="page-intro">{home.sections.products.summary}</p>
-        <EntryList rows={rows} />
-      </div>
     )
   }
 </Base>
 
 <style>
+  .head {
+    padding-bottom: var(--s-6);
+  }
+
+  /* ---------- Demos ---------- */
+
+  .demos {
+    padding-block: var(--s-6) var(--s-10);
+    scroll-margin-top: var(--s-4);
+  }
+
+  .demos-head {
+    margin-bottom: var(--s-8);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--hairline);
+  }
+
+  .demos-head > * {
+    max-width: 40rem;
+  }
+
+  .demos-title {
+    margin-top: var(--s-2);
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+  }
+
+  .demos-text {
+    margin-top: var(--s-2);
+    color: var(--muted);
+  }
+
+  .demos-note {
+    margin-top: var(--s-8);
+    max-width: 46rem;
+    font-size: var(--text-small);
+    color: var(--muted);
+  }
+
+  /* ---------- Products coming soon ---------- */
+
   .soon {
     position: relative;
     isolation: isolate;
-    min-height: calc(100svh - var(--header-h));
     display: flex;
     align-items: center;
-    padding-block: var(--s-10);
+    min-height: 34rem;
+    padding-block: var(--s-10) var(--s-12);
+    border-top: 1px solid var(--hairline);
   }
 
   /* Soft coral glow */
@@ -110,7 +172,6 @@ const notify = `mailto:${contact.email}?subject=${encodeURIComponent('Notify me 
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--products-ink);
-    animation: rise 800ms var(--ease-out) both;
   }
 
   .pulse {
@@ -140,10 +201,9 @@ const notify = `mailto:${contact.email}?subject=${encodeURIComponent('Notify me 
 
   .soon-title {
     margin-top: var(--s-4);
-    font-size: clamp(3.25rem, 10vw, 7rem);
+    font-size: clamp(2.75rem, 8vw, 5.5rem);
     line-height: 1;
     letter-spacing: -0.035em;
-    animation: rise 1000ms 100ms var(--ease-out) both;
   }
 
   .dot {
@@ -155,12 +215,10 @@ const notify = `mailto:${contact.email}?subject=${encodeURIComponent('Notify me 
     max-width: 34rem;
     color: var(--muted);
     font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
-    animation: rise 1000ms 220ms var(--ease-out) both;
   }
 
   .notify {
     margin-top: var(--s-5);
-    animation: rise 1000ms 340ms var(--ease-out) both;
   }
 
   /* Orbits: three hairline rings, each carrying one coloured dot */
@@ -169,16 +227,9 @@ const notify = `mailto:${contact.email}?subject=${encodeURIComponent('Notify me 
     z-index: -1;
     top: 50%;
     right: var(--gutter);
-    width: min(30rem, 80vw);
+    width: min(26rem, 80vw);
     aspect-ratio: 1;
     translate: 0 -50%;
-    animation: fade-in 1600ms 400ms ease-out both;
-  }
-
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
   }
 
   .orbit {

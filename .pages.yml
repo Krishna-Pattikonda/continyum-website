@@ -54,6 +54,16 @@ content:
         label: Footer tagline
         type: string
         description: The line under the logo in the footer.
+      - name: demos
+        label: Demos section
+        type: object
+        fields:
+          - { name: show_on_home, label: Show 3 featured demos on the home page, type: boolean, default: true }
+          - { name: label, label: Small label, type: string, required: true }
+          - { name: heading, label: Heading, type: string, required: true }
+          - { name: text, label: Intro, type: text, required: true }
+          - { name: note, label: Honesty note (shown under the demos), type: text, required: true }
+          - { name: link_label, label: '"See all" link text', type: string, required: true }
       - name: sections
         label: Page intros
         description: The sentence under the title on the Research, Products and Team pages.
@@ -178,6 +188,95 @@ content:
         type: rich-text
         options:
           format: markdown
+
+  # ---------------------------------------------------------------- Demos
+  - name: demos
+    label: Demos
+    type: collection
+    path: src/content/demos
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      primary: name
+      fields: [name, status, featured, order, draft]
+      sort: order
+      order: asc
+    fields:
+      - name: name
+        label: Name
+        type: string
+        required: true
+      - name: tagline
+        label: Tagline (one line)
+        type: string
+        required: true
+        description: Shown on the demo card and at the top of the demo page.
+      - name: problem
+        label: The problem (1–2 sentences)
+        type: text
+        required: true
+      - name: howItWorks
+        label: How it works (3–5 short steps)
+        type: string
+        list: true
+        required: true
+        description: One step per entry. Shown as numbered steps.
+      - name: status
+        label: Status
+        type: select
+        required: true
+        default: In development
+        options:
+          values: [Working demo, Prototype, In development]
+      - name: exampleOutput
+        label: Example output (optional)
+        type: text
+        description: Shown under the label "Illustrative example". Use made-up sample data only.
+      - name: demoUrl
+        label: Demo link (optional)
+        type: string
+        description: Full https:// address. Adds a "Try it" button. Leave empty or [PLACEHOLDER] to hide it.
+      - name: videoUrl
+        label: Video link (optional)
+        type: string
+        description: Full https:// address. Adds a "Watch video" link. Leave empty or [PLACEHOLDER] to hide it.
+      - name: screenshots
+        label: Screenshots (optional)
+        type: image
+        options:
+          multiple:
+            max: 6
+        description: Shown on the demo page. If a demo has no illustration, the first screenshot is used on its card.
+      - name: stack
+        label: Stack (optional)
+        type: string
+        list: true
+        description: Tools and models used, one per entry.
+      - name: illustration
+        label: Animated illustration
+        type: select
+        options:
+          values: [rto, voice, ops, competitor, creative, cfo]
+        description: Which built-in animation to show. Leave empty to show the first screenshot instead.
+      - name: featured
+        label: Featured on home page
+        type: boolean
+        default: false
+        description: The home page shows 3 demos, featured ones first.
+      - name: order
+        label: Order
+        type: number
+        description: Lower numbers appear first.
+      - name: draft
+        label: Draft (hidden from the site)
+        type: boolean
+        default: false
+      - name: body
+        label: Notes (optional)
+        type: rich-text
+        options:
+          format: markdown
+        description: Extra text shown under the problem, e.g. who it's for.
 
   # ---------------------------------------------------------------- Team
   - name: team

@@ -1,0 +1,172 @@
+---
+/* Competitor Intelligence Engine: both price lines draw in, the competitor's line dips,
+   the dip is flagged and a brief appears. Resting state = full chart, dip flagged, brief shown. */
+---
+
+<svg class="art" viewBox="0 0 320 200" aria-hidden="true" focusable="false">
+  <!-- legend -->
+  <line class="you" x1="40" x2="52" y1="19" y2="19" pathLength="1" style="animation: none"></line>
+  <text class="m s" x="56" y="22">You</text>
+  <line class="them" x1="84" x2="96" y1="19" y2="19" pathLength="1" style="animation: none"></line>
+  <text class="m s" x="100" y="22">Competitor</text>
+
+  <!-- grid -->
+  <g class="grid">
+    <line x1="40" x2="300" y1="40" y2="40"></line>
+    <line x1="40" x2="300" y1="76" y2="76"></line>
+    <line x1="40" x2="300" y1="112" y2="112"></line>
+    <line x1="40" x2="300" y1="148" y2="148"></line>
+  </g>
+  <text class="m s" x="34" y="43" text-anchor="end">₹1.2k</text>
+  <text class="m s" x="34" y="79" text-anchor="end">₹1.0k</text>
+  <text class="m s" x="34" y="115" text-anchor="end">₹0.8k</text>
+
+  <g class="lines">
+    <path class="you" pathLength="1" d="M40 92L83 90L126 92L169 91L212 92L256 90L300 91"></path>
+    <path class="them" pathLength="1" d="M40 68L83 66L126 70L169 68L208 120L254 116L300 118"></path>
+  </g>
+
+  <!-- the dip -->
+  <g class="flag">
+    <circle class="dot" cx="208" cy="120" r="5"></circle>
+    <text class="cut" x="208" y="138" text-anchor="middle">Price cut −12%</text>
+  </g>
+
+  <!-- weekly brief -->
+  <g class="brief">
+    <rect class="brief-box" x="40" y="158" width="260" height="30" rx="6"></rect>
+    <text class="t" x="52" y="177"><tspan class="strong">Weekly brief</tspan> · match price on your 2 closest products</text>
+  </g>
+</svg>
+
+<style>
+  .art {
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-family: var(--font-sans);
+  }
+
+  .m {
+    fill: var(--muted);
+  }
+
+  .s {
+    font-size: 9px;
+  }
+
+  .t {
+    font-size: 9.5px;
+    fill: var(--text);
+  }
+
+  .strong {
+    font-weight: 500;
+  }
+
+  .grid line {
+    stroke: var(--hairline);
+  }
+
+  .you,
+  .them {
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    animation: comp-draw 9s cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+  }
+
+  .you {
+    stroke: var(--text);
+  }
+
+  .them {
+    stroke: var(--research-ink);
+  }
+
+  .lines {
+    animation: comp-fade 9s ease infinite both;
+  }
+
+  .dot {
+    fill: #ffffff;
+    stroke: var(--products-ink);
+    stroke-width: 2;
+  }
+
+  .cut {
+    font-size: 9.5px;
+    font-weight: 500;
+    fill: var(--products-ink);
+  }
+
+  .flag {
+    transform-box: fill-box;
+    transform-origin: 50% 20%;
+    animation: comp-flag 9s ease infinite both;
+  }
+
+  .brief-box {
+    fill: #f3f5ff;
+    stroke: var(--research-tint);
+  }
+
+  .brief {
+    animation: comp-brief 9s ease infinite both;
+  }
+
+  @keyframes comp-draw {
+    0% {
+      stroke-dashoffset: 1;
+    }
+    36%,
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes comp-fade {
+    0%,
+    92% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes comp-flag {
+    0%,
+    36% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    44%,
+    92% {
+      opacity: 1;
+      transform: none;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes comp-brief {
+    0%,
+    48% {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    56%,
+    92% {
+      opacity: 1;
+      transform: none;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+</style>

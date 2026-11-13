@@ -1,11 +1,12 @@
 ---
 import { Image } from 'astro:assets';
 import logoLight from '../assets/brand/continyum-logo-light.png';
-import { getContact, getHome, getProducts, url } from '../lib/content';
+import { getContact, getDemos, getHome, getProducts, url } from '../lib/content';
 
 const home = await getHome();
 const contact = await getContact();
 const products = await getProducts();
+const hasDemos = (await getDemos()).length > 0;
 const year = new Date().getFullYear();
 
 const company = [
@@ -40,6 +41,13 @@ const company = [
                 <span class="soon-dot" aria-hidden="true" />
                 Coming soon
               </a>
+            </li>
+          )
+        }
+        {
+          hasDemos && (
+            <li>
+              <a href={url('/products/#demos')}>Demos</a>
             </li>
           )
         }

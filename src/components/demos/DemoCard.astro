@@ -1,0 +1,99 @@
+---
+/* One demo in a grid: illustration, status, name (the link), tagline. The whole card is clickable. */
+import DemoArt from './DemoArt.astro';
+import { url, type Demo } from '../../lib/content';
+
+interface Props {
+  demo: Demo;
+  level?: 'h2' | 'h3';
+  /** Fade the card in on scroll. Off on the home page to keep first load as light as possible. */
+  reveal?: boolean;
+}
+
+const { demo, level = 'h3', reveal = true } = Astro.props;
+const Heading = level;
+const d = demo.data;
+const href = url(`/products/demos/${demo.id}`);
+---
+
+<article class:list={['card', { reveal }]}>
+  <DemoArt kind={d.illustration} decorative image={d.screenshots?.[0]} />
+  <div class="body">
+    <p class="status" data-status={d.status}>{d.status}</p>
+    <Heading class="title"><a href={href}>{d.name}</a></Heading>
+    <p class="tagline">{d.tagline}</p>
+    <span class="more" aria-hidden="true">View demo <span class="arrow">→</span></span>
+  </div>
+</article>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .status {
+    font-size: var(--text-label);
+    font-weight: 500;
+  }
+
+  .title {
+    margin-top: var(--s-1);
+    font-size: 1.5rem;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+
+  /* The name is the link; it stretches over the whole card */
+  .title a {
+    text-decoration: none;
+    outline: none;
+  }
+
+  .title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .card:has(.title a:focus-visible) {
+    outline: 2px solid #111111;
+    outline-offset: 6px;
+  }
+
+  .tagline {
+    margin-top: var(--s-1);
+    color: var(--muted);
+    font-size: var(--text-small);
+    line-height: 1.55;
+  }
+
+  .more {
+    margin-top: auto;
+    padding-top: var(--s-2);
+    font-size: var(--text-small);
+    font-weight: 500;
+  }
+
+  .more .arrow {
+    display: inline-block;
+    transition: transform 300ms var(--ease-out);
+  }
+
+  /* hover: brass frame, arrow nudges */
+  .card:hover :global(.frame) {
+    border-color: var(--accent);
+  }
+
+  .card:hover .more .arrow {
+    transform: translateX(4px);
+  }
+</style>

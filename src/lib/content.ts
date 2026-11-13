@@ -3,6 +3,19 @@ import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 export type Research = CollectionEntry<'research'>;
 export type Product = CollectionEntry<'products'>;
 export type Person = CollectionEntry<'team'>;
+export type Demo = CollectionEntry<'demos'>;
+
+/** All published demos, by `order` then name. Drafts are always excluded. */
+export async function getDemos(): Promise<Demo[]> {
+  const items = await getCollection('demos', ({ data }) => !data.draft);
+  return items.sort((a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name));
+}
+
+/** Featured demos first (then the rest, in order), up to `limit`. */
+export async function getFeaturedDemos(limit = 3): Promise<Demo[]> {
+  const all = await getDemos();
+  return [...all.filter((d) => d.data.featured), ...all.filter((d) => !d.data.featured)].slice(0, limit);
+}
 
 /** Prefix an internal path with the site's base path (needed for GitHub Pages project sites). */
 export function url(path: string): string {

@@ -1,0 +1,53 @@
+---
+import DemoCard from './DemoCard.astro';
+import type { Demo } from '../../lib/content';
+
+interface Props {
+  demos: Demo[];
+  level?: 'h2' | 'h3';
+  reveal?: boolean;
+}
+
+const { demos, level = 'h3', reveal = true } = Astro.props;
+---
+
+<ul class="grid">
+  {
+    demos.map((demo) => (
+      <li>
+        <DemoCard demo={demo} level={level} reveal={reveal} />
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-8) var(--s-5);
+  }
+
+  .grid > li {
+    display: flex;
+  }
+
+  .grid > li > :global(*) {
+    flex: 1;
+  }
+
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

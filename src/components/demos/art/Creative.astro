@@ -1,0 +1,187 @@
+---
+/* Ad Creative Lab: four ad variations get scored, then shuffle into ranked order; the best bet is marked.
+   Resting state = ranked order with scores and the winner marked. */
+const slots = [28, 100, 172, 244];
+// x = starting slot, to = shift into ranked slot
+const tiles = [
+  { id: 'A', x: slots[0], score: 58, tint: 'var(--contact-tint)', to: slots[3] - slots[0] },
+  { id: 'B', x: slots[1], score: 81, tint: 'var(--team-tint)', to: 0 },
+  { id: 'C', x: slots[2], score: 92, tint: 'var(--research-tint)', to: slots[0] - slots[2], win: true },
+  { id: 'D', x: slots[3], score: 64, tint: 'var(--products-tint)', to: slots[2] - slots[3] },
+];
+---
+
+<svg class="art" viewBox="0 0 320 200" aria-hidden="true" focusable="false">
+  <text class="m xs" x="28" y="18">VARIANTS RANKED AGAINST PAST PERFORMANCE</text>
+
+  {
+    tiles.map((t, i) => (
+      <g class="tile" style={`--to: ${t.to}px`}>
+        <rect class="ad" x={t.x} y="28" width="56" height="74" rx="4" />
+        <rect x={t.x + 6} y="34" width="44" height="34" rx="2" style={`fill: ${t.tint}`} />
+        <rect class="line1" x={t.x + 6} y="75" width="36" height="4" rx="2" />
+        <rect class="line2" x={t.x + 6} y="83" width="26" height="4" rx="2" />
+        <rect class="cta" x={t.x + 6} y="92" width="20" height="5" rx="2.5" />
+        {t.win && <rect class="win-ring" x={t.x - 3} y="25" width="62" height="80" rx="6" />}
+
+        <rect class="track" x={t.x} y="114" width="56" height="5" rx="2.5" />
+        <rect
+          class:list={['fill', { 'fill-win': t.win }]}
+          x={t.x}
+          y="114"
+          width={(56 * t.score) / 100}
+          height="5"
+          rx="2.5"
+          style={`animation-delay: ${i * 0.15}s`}
+        />
+        <text class="score" x={t.x} y="134">
+          {t.score}
+        </text>
+        {
+          t.win && (
+            <text class="best" x={t.x + 56} y="134" text-anchor="end">
+              Best bet
+            </text>
+          )
+        }
+      </g>
+    ))
+  }
+
+  <text class="m s" x="28" y="170">Predicted score · higher is better</text>
+</svg>
+
+<style>
+  .art {
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-family: var(--font-sans);
+  }
+
+  .m {
+    fill: var(--muted);
+  }
+
+  .s {
+    font-size: 9px;
+  }
+
+  .xs {
+    font-size: 8px;
+    letter-spacing: 0.08em;
+  }
+
+  .tile {
+    transform: translateX(var(--to));
+    animation: cr-move 10s cubic-bezier(0.65, 0, 0.35, 1) infinite both;
+  }
+
+  .ad {
+    fill: #ffffff;
+    stroke: var(--hairline);
+  }
+
+  .line1 {
+    fill: #d9d9d9;
+  }
+
+  .line2 {
+    fill: #e8e8e8;
+  }
+
+  .cta {
+    fill: var(--text);
+  }
+
+  .track {
+    fill: #efefef;
+  }
+
+  .fill {
+    fill: var(--text);
+    transform-box: fill-box;
+    transform-origin: left center;
+    animation: cr-bar 10s cubic-bezier(0.2, 0.7, 0.2, 1) infinite both;
+  }
+
+  .fill-win {
+    fill: var(--team-ink);
+  }
+
+  .score {
+    font-size: 10px;
+    font-weight: 500;
+    fill: var(--text);
+    animation: cr-score 10s ease infinite both;
+  }
+
+  .win-ring {
+    fill: none;
+    stroke: var(--team-ink);
+    stroke-width: 1.5;
+    animation: cr-win 10s ease infinite both;
+  }
+
+  .best {
+    font-size: 9px;
+    font-weight: 500;
+    fill: var(--team-ink);
+    animation: cr-win 10s ease infinite both;
+  }
+
+  @keyframes cr-move {
+    0%,
+    34% {
+      transform: translateX(0);
+    }
+    50%,
+    90% {
+      transform: translateX(var(--to));
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes cr-bar {
+    0% {
+      transform: scaleX(0);
+    }
+    26%,
+    90% {
+      transform: scaleX(1);
+    }
+    100% {
+      transform: scaleX(0);
+    }
+  }
+
+  @keyframes cr-score {
+    0%,
+    18% {
+      opacity: 0;
+    }
+    28%,
+    90% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes cr-win {
+    0%,
+    50% {
+      opacity: 0;
+    }
+    58%,
+    90% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+</style>
