@@ -218,6 +218,11 @@ content:
         label: Order
         type: number
         description: Lower numbers appear first.
+      - name: show_on_contact
+        label: Show on Contact page
+        type: boolean
+        default: true
+        description: Untick to list this person on the Team page only, not under "Talk to a founder" on the Contact page.
 
   # ---------------------------------------------------------------- Contact
   - name: contact

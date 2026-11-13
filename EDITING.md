@@ -72,7 +72,8 @@ The **Page intros** on the same screen are the sentence shown under the title on
 
    The site picks the right little icon automatically.
 5. **Order**: 1 appears first.
-6. Click **Save**.
+6. **Show on Contact page**: ticked by default. Untick it to list someone on the Team page only, not under "Talk to a founder" on the Contact page.
+7. Click **Save**.
 
 ---
 

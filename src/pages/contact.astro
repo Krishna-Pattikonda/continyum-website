@@ -5,7 +5,7 @@ import LinkIcon from '../components/LinkIcon.astro';
 import { getContact, getTeam } from '../lib/content';
 
 const contact = await getContact();
-const team = (await getTeam()).filter((p) => p.data.links?.length);
+const team = (await getTeam()).filter((p) => p.data.links?.length && p.data.show_on_contact !== false);
 
 const headline = contact.headline ?? 'Contact.';
 const title = headline.replace(/[.!]$/, '');

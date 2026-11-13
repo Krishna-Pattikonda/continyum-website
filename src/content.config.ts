@@ -112,6 +112,8 @@ const team = defineCollection({
       photo: optional(image()),
       links: optionalList(link),
       order: optional(z.coerce.number()),
+      // false = listed on the Team page only, not under "Talk to a founder" on Contact
+      show_on_contact: optional(z.boolean()),
     }),
 });
 

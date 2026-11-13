@@ -1,0 +1,13 @@
+name: Devan Ippili
+role: Chief Marketing Officer
+bio: ""
+photo: ../../assets/uploads/devan-ippili.png
+links:
+  - label: devan@continyum.in
+    url: mailto:devan@continyum.in
+  - label: +91 95156 79621
+    url: tel:+919515679621
+  - label: LinkedIn
+    url: https://www.linkedin.com/in/dippili/
+order: 3
+show_on_contact: false
