@@ -1,0 +1,62 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import EntryMeta from '../../components/EntryMeta.astro';
+import { getProducts, url, type Product } from '../../lib/content';
+
+export const getStaticPaths = (async () => {
+  const products = await getProducts();
+  return products.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  entry: Product;
+}
+
+const { entry } = Astro.props;
+const { name, description, status, url: externalUrl } = entry.data;
+const { Content } = await render(entry);
+---
+
+<Base title={name} description={description}>
+  <article class="container page">
+    <a class="text-link back-link" href={url('/products')}>
+      <span class="arrow back" aria-hidden="true">←</span>All products
+    </a>
+    <h1 class="page-title">{name}</h1>
+    <p class="lede">{description}</p>
+    <EntryMeta status={status} />
+    {
+      externalUrl && (
+        <p class="external">
+          <a class="text-link" href={externalUrl}>
+            Visit
+            <span class="arrow" aria-hidden="true">
+              →
+            </span>
+          </a>
+        </p>
+      )
+    }
+    <div class="prose body">
+      <Content />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .lede {
+    margin-top: var(--s-3);
+    max-width: var(--measure);
+    animation: rise 800ms 80ms var(--ease-out) both;
+  }
+
+  .external {
+    margin-top: var(--s-3);
+  }
+
+  .body {
+    margin-top: var(--s-8);
+  }
+</style>

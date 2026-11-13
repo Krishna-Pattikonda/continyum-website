@@ -1,0 +1,526 @@
+/* ---------------------------------------------------------------
+   Continyum — global tokens and base styles
+   --------------------------------------------------------------- */
+
+:root {
+  /* Base colour */
+  --bg: #ffffff;
+  --text: #111111;
+  --muted: #6b6b6b; /* 5.33:1 on white */
+  --accent: #c9a961; /* brass — decorative only, never text */
+  --hairline: #e8e8e8;
+
+  /* Section palette.
+     "ink" = text-safe on white (all ≥ 4.9:1). "tint" = pastel, decoration only. */
+  --research-ink: #2b45d4;
+  --research-tint: #c7d2fe;
+  --products-ink: #c2410c;
+  --products-tint: #fed7aa;
+  --team-ink: #15803d;
+  --team-tint: #bbf7d0;
+  --contact-ink: #a16207;
+  --contact-tint: #fde68a;
+
+  /* Current section colour — overridden by [data-section] below. */
+  --ink: var(--text);
+  --tint: #f1ead6;
+  --wash: #faf8f2;
+  --underline: var(--accent);
+
+  /* Type */
+  --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --text-base: 1.0625rem; /* 17px */
+  --text-small: 0.9375rem; /* 15px */
+  --text-label: 0.75rem; /* 12px */
+
+  /* Spacing — 8px scale */
+  --s-1: 0.5rem;
+  --s-2: 1rem;
+  --s-3: 1.5rem;
+  --s-4: 2rem;
+  --s-5: 2.5rem;
+  --s-6: 3rem;
+  --s-8: 4rem;
+  --s-10: 5rem;
+  --s-12: 6rem;
+
+  /* Layout */
+  --max: 1100px;
+  --measure: 65ch;
+  --gutter: var(--s-3);
+  --header-h: 4.5rem;
+  --block-gap: var(--s-6); /* 96px between home blocks on mobile */
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --t: 200ms var(--ease-out);
+}
+
+@media (min-width: 640px) {
+  :root {
+    --text-base: 1.125rem;
+    --gutter: var(--s-5);
+    --block-gap: var(--s-10); /* 160px on desktop */
+  }
+}
+
+[data-section='research'] {
+  --ink: var(--research-ink);
+  --tint: var(--research-tint);
+  --wash: #f3f5ff;
+  --underline: var(--research-ink);
+}
+
+[data-section='products'] {
+  --ink: var(--products-ink);
+  --tint: var(--products-tint);
+  --wash: #fff6ef;
+  --underline: var(--products-ink);
+}
+
+[data-section='team'] {
+  --ink: var(--team-ink);
+  --tint: var(--team-tint);
+  --wash: #f0fbf4;
+  --underline: var(--team-ink);
+}
+
+[data-section='contact'] {
+  --ink: var(--contact-ink);
+  --tint: var(--contact-tint);
+  --wash: #fffaeb;
+  --underline: var(--contact-ink);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  overflow-x: clip; /* decorative blobs may extend past the edge */
+}
+
+::selection {
+  background: var(--contact-tint);
+  color: var(--text);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+p,
+ul,
+ol,
+figure,
+blockquote {
+  margin: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ---------- Links ---------- */
+
+a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+  transition:
+    text-decoration-color var(--t),
+    color var(--t);
+}
+
+a:hover {
+  text-decoration-color: var(--underline);
+}
+
+:focus-visible {
+  outline: 2px solid #111111;
+  outline-offset: 3px;
+}
+
+/* ---------- Utilities ---------- */
+
+.container {
+  width: 100%;
+  max-width: calc(var(--max) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: var(--font-sans);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.label::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -100px;
+  background: var(--bg);
+  padding: var(--s-1) var(--s-2);
+  z-index: 10;
+}
+
+.skip-link:focus {
+  top: var(--s-1);
+}
+
+/* Text link with an arrow that nudges on hover, e.g. "View all →" */
+.text-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4em;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) no-repeat left bottom / 0% 1px;
+  padding-bottom: 2px;
+  transition: background-size 300ms var(--ease-out);
+}
+
+.text-link:hover {
+  background-size: 100% 1px;
+}
+
+.text-link .arrow {
+  display: inline-block;
+  transition: transform 300ms var(--ease-out);
+}
+
+.text-link:hover .arrow {
+  transform: translateX(4px);
+}
+
+.text-link .arrow.back {
+  order: -1;
+}
+
+.text-link:hover .arrow.back {
+  transform: translateX(-4px);
+}
+
+/* Solid pill button, e.g. "Explore our research →" */
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  background: #0b1220;
+  color: #ffffff;
+  font-size: var(--text-small);
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    background-color 250ms var(--ease-out),
+    transform 250ms var(--ease-out);
+}
+
+.button:hover {
+  background: var(--research-ink);
+  transform: translateY(-1px);
+}
+
+.button .arrow {
+  display: inline-block;
+  transition: transform 300ms var(--ease-out);
+}
+
+.button:hover .arrow {
+  transform: translateX(4px);
+}
+
+/* Status with a coloured dot, e.g. "● In progress" */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  white-space: nowrap;
+  color: var(--status, var(--muted));
+}
+
+.status::before {
+  content: '';
+  width: 0.45em;
+  height: 0.45em;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status[data-status='Published'],
+.status[data-status='Live'] {
+  --status: var(--team-ink);
+}
+
+.status[data-status='Preprint'],
+.status[data-status='Pilot'] {
+  --status: var(--research-ink);
+}
+
+.status[data-status='In progress'],
+.status[data-status='In development'] {
+  --status: var(--contact-ink);
+}
+
+/* ---------- Page scaffolding (index / detail pages) ---------- */
+
+.page {
+  position: relative;
+  isolation: isolate;
+  padding-block: var(--s-8) var(--s-12);
+}
+
+/* Soft drifting colour blob behind every page header */
+.page::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -14rem;
+  right: -12rem;
+  width: 36rem;
+  height: 36rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--tint) 0%, transparent 65%);
+  opacity: 0.7;
+  pointer-events: none;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+.page-title {
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  max-width: 20ch;
+  animation: rise 800ms var(--ease-out) both;
+}
+
+/* Index pages: a full stop in the section colour */
+.page-title.dot::after {
+  content: '.';
+  color: var(--ink);
+}
+
+.page-intro {
+  margin-top: var(--s-3);
+  max-width: var(--measure);
+  color: var(--muted);
+  white-space: pre-line; /* line breaks typed in the CMS are kept */
+  animation: rise 800ms 120ms var(--ease-out) both;
+}
+
+.back-link {
+  margin-bottom: var(--s-6);
+  font-size: var(--text-small);
+}
+
+/* ---------- Markdown body ---------- */
+
+.prose {
+  max-width: var(--measure);
+}
+
+.prose > * + * {
+  margin-top: 1.25em;
+}
+
+.prose h2 {
+  font-size: 1.75rem;
+  margin-top: 2.25em;
+}
+
+.prose h3 {
+  font-size: 1.375rem;
+  margin-top: 2em;
+}
+
+.prose h4 {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 2em;
+}
+
+.prose h2 + *,
+.prose h3 + *,
+.prose h4 + * {
+  margin-top: 0.75em;
+}
+
+.prose a {
+  color: var(--ink);
+  text-decoration-color: currentColor;
+}
+
+.prose a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.25em;
+}
+
+.prose li + li {
+  margin-top: 0.4em;
+}
+
+.prose li::marker {
+  color: var(--ink);
+}
+
+.prose blockquote {
+  border-left: 3px solid var(--tint);
+  padding-left: var(--s-3);
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--hairline);
+  margin-block: var(--s-6);
+}
+
+.prose img {
+  margin-block: var(--s-4);
+}
+
+.prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.875em;
+}
+
+.prose :not(pre) > code {
+  background: var(--wash);
+  padding: 0.1em 0.3em;
+}
+
+.prose pre {
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--tint);
+  padding: var(--s-2) var(--s-3);
+  overflow-x: auto;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  background: #ffffff !important;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-small);
+}
+
+.prose th,
+.prose td {
+  text-align: left;
+  padding: var(--s-1) var(--s-2) var(--s-1) 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes rise {
+  from {
+    /* 0.01, not 0, so the browser still counts it as the page's main paint */
+    opacity: 0.01;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-6%, 8%, 0) scale(1.12);
+  }
+}
+
+/* Scroll-driven reveal. Browsers without support simply show the content. */
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: rise linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 55%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

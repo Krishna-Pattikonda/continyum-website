@@ -1,0 +1,36 @@
+---
+/* The metadata line under a detail page title, e.g. "12 Nov 2026 · ● In progress". */
+interface Props {
+  date?: { text: string; datetime: string };
+  status?: string;
+}
+
+const { date, status } = Astro.props;
+---
+
+{
+  (date || status) && (
+    <p class="meta tabular">
+      {date && <time datetime={date.datetime}>{date.text}</time>}
+      {date && status && <span aria-hidden="true">·</span>}
+      {status && (
+        <span class="status" data-status={status}>
+          {status}
+        </span>
+      )}
+    </p>
+  )
+}
+
+<style>
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6em;
+    margin-top: var(--s-3);
+    color: var(--muted);
+    font-size: var(--text-small);
+    animation: rise 800ms 120ms var(--ease-out) both;
+  }
+</style>

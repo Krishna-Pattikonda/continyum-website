@@ -1,0 +1,27 @@
+eyebrow: AI research & technology
+headline: Your partner in enterprise AI and frontier technology.
+# A phrase from the headline to emphasise (italic, with a colour underline). Leave empty for none.
+highlight: frontier technology
+subline: We study the hard problems in AI, then turn the answers into products people rely on.
+primary_cta:
+  label: Explore our research
+  href: /research
+secondary_cta:
+  label: Get in touch
+  href: /contact
+# Shows the newest "In progress" research paper as a live ticker on the home page.
+show_now_researching: true
+tagline: Your partner in enterprise AI and frontier technology.
+sections:
+  research:
+    summary: |-
+      We study the hard problems in AI.
+      Then we turn the answers into products people rely on.
+  products:
+    summary: Software built on our research, for teams that need AI to work reliably in the real world.
+    coming_soon:
+      headline: Coming soon.
+      text: Our first products are in development. We'll share them here the moment they're ready.
+      button: Get notified
+  team:
+    summary: We’re early, and we like it that way. It’s a founding team that is close to the work, the customers and the problems worth solving.

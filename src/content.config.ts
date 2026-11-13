@@ -1,0 +1,118 @@
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
+
+/*
+ * The CMS sometimes saves an empty optional field as "" or null.
+ * Treat those as "not set" so the build never fails on a blank field.
+ */
+const blank = (value: unknown) => (value === '' || value === null ? undefined : value);
+const optional = <T extends z.ZodType>(schema: T) => z.preprocess(blank, schema.optional());
+const optionalList = <T extends z.ZodType>(item: T) =>
+  z.preprocess((value) => {
+    if (!Array.isArray(value)) return blank(value);
+    const items = value.filter((v) => blank(v) !== undefined);
+    return items.length ? items : undefined;
+  }, z.array(item).optional());
+
+const link = z.object({
+  label: z.string(),
+  url: z.url(),
+});
+
+/* A button: label + where it goes (a page like /research, or a full URL). */
+const cta = z.object({
+  label: z.string(),
+  href: z.string(),
+});
+
+/* ---------- Single files ---------- */
+
+const home = defineCollection({
+  loader: glob({ pattern: 'home.yaml', base: './src/content/site' }),
+  schema: z.object({
+    eyebrow: optional(z.string()),
+    headline: z.string(),
+    highlight: optional(z.string()),
+    subline: optional(z.string()),
+    primary_cta: optional(cta),
+    secondary_cta: optional(cta),
+    show_now_researching: optional(z.boolean()),
+    tagline: optional(z.string()),
+    sections: z.object({
+      research: z.object({ summary: z.string() }),
+      products: z.object({
+        summary: z.string(),
+        // Shown on /products while no product is published
+        coming_soon: z.object({
+          headline: z.string(),
+          text: z.string(),
+          button: z.string(),
+        }),
+      }),
+      team: z.object({ summary: z.string() }),
+    }),
+  }),
+});
+
+const contact = defineCollection({
+  loader: glob({ pattern: 'contact.yaml', base: './src/content/site' }),
+  schema: z.object({
+    headline: optional(z.string()),
+    intro: z.string(),
+    email: z.string(),
+    topics: optionalList(z.object({ label: z.string(), subject: z.string() })),
+    address: optionalList(z.string()),
+    location: optional(
+      z.object({
+        coordinates: optional(z.string()),
+        timezone: optional(z.string()),
+        map_url: optional(z.url()),
+      }),
+    ),
+    greetings: optionalList(z.string()),
+    channels: optionalList(link),
+  }),
+});
+
+/* ---------- Collections ---------- */
+
+const research = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/research' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.coerce.date(),
+    status: optional(z.enum(['In progress', 'Published', 'Preprint'])),
+    authors: optionalList(z.string()),
+    link: optional(z.url()),
+    draft: optional(z.boolean()),
+  }),
+});
+
+const products = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/products' }),
+  schema: z.object({
+    name: z.string(),
+    description: z.string(),
+    status: z.enum(['Live', 'Pilot', 'In development']),
+    url: optional(z.url()),
+    order: optional(z.coerce.number()),
+    draft: optional(z.boolean()),
+  }),
+});
+
+const team = defineCollection({
+  loader: glob({ pattern: '**/*.{yaml,yml}', base: './src/content/team' }),
+  schema: ({ image }) =>
+    z.object({
+      name: z.string(),
+      role: z.string(),
+      bio: optional(z.string()),
+      photo: optional(image()),
+      links: optionalList(link),
+      order: optional(z.coerce.number()),
+    }),
+});
+
+export const collections = { home, contact, research, products, team };

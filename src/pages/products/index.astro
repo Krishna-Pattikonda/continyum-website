@@ -1,0 +1,255 @@
+---
+import Base from '../../layouts/Base.astro';
+import EntryList from '../../components/EntryList.astro';
+import { getContact, getHome, getProducts, url } from '../../lib/content';
+
+const home = await getHome();
+const contact = await getContact();
+const products = await getProducts();
+
+const rows = products.map((p) => ({
+  href: url(`/products/${p.id}`),
+  title: p.data.name,
+  description: p.data.description,
+  status: p.data.status,
+}));
+
+// While nothing is published, show the "coming soon" screen instead of an empty list.
+const soon = home.sections.products.coming_soon;
+const comingSoon = products.length === 0;
+const headline = soon.headline.replace(/\.$/, '');
+const endsWithDot = soon.headline.endsWith('.');
+const notify = `mailto:${contact.email}?subject=${encodeURIComponent('Notify me about Continyum products')}`;
+---
+
+<Base title="Products" description={comingSoon ? soon.text : home.sections.products.summary}>
+  {
+    comingSoon ? (
+      <section class="soon container" aria-labelledby="soon-title">
+        <div class="orbits" aria-hidden="true">
+          <span class="orbit o1">
+            <i />
+          </span>
+          <span class="orbit o2">
+            <i />
+          </span>
+          <span class="orbit o3">
+            <i />
+          </span>
+        </div>
+
+        <div class="soon-inner">
+          <p class="pill">
+            <span class="pulse" aria-hidden="true" />
+            In development
+          </p>
+          <h1 id="soon-title" class="soon-title">
+            {headline}
+            {endsWithDot && <span class="dot">.</span>}
+          </h1>
+          <p class="soon-text">{soon.text}</p>
+          <a class="text-link notify" href={notify}>
+            {soon.button}
+            <span class="arrow" aria-hidden="true">
+              →
+            </span>
+          </a>
+        </div>
+      </section>
+    ) : (
+      <div class="container page">
+        <h1 class="page-title dot">Products</h1>
+        <p class="page-intro">{home.sections.products.summary}</p>
+        <EntryList rows={rows} />
+      </div>
+    )
+  }
+</Base>
+
+<style>
+  .soon {
+    position: relative;
+    isolation: isolate;
+    min-height: calc(100svh - var(--header-h));
+    display: flex;
+    align-items: center;
+    padding-block: var(--s-10);
+  }
+
+  /* Soft coral glow */
+  .soon::before {
+    content: '';
+    position: absolute;
+    z-index: -2;
+    top: 50%;
+    right: -10%;
+    width: 46rem;
+    height: 46rem;
+    translate: 0 -50%;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--products-tint) 0%, transparent 62%);
+    opacity: 0.75;
+    animation: drift 20s ease-in-out infinite alternate;
+  }
+
+  .soon-inner {
+    max-width: 38rem;
+  }
+
+  /* "● In development" with a gently pinging dot */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.35rem 0.9rem 0.35rem 0.75rem;
+    border: 1px solid var(--products-tint);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.7);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--products-ink);
+    animation: rise 800ms var(--ease-out) both;
+  }
+
+  .pulse {
+    position: relative;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--products-ink);
+  }
+
+  .pulse::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--products-ink);
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  @keyframes ping {
+    75%,
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+
+  .soon-title {
+    margin-top: var(--s-4);
+    font-size: clamp(3.25rem, 10vw, 7rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+    animation: rise 1000ms 100ms var(--ease-out) both;
+  }
+
+  .dot {
+    color: var(--products-ink);
+  }
+
+  .soon-text {
+    margin-top: var(--s-4);
+    max-width: 34rem;
+    color: var(--muted);
+    font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+    animation: rise 1000ms 220ms var(--ease-out) both;
+  }
+
+  .notify {
+    margin-top: var(--s-5);
+    animation: rise 1000ms 340ms var(--ease-out) both;
+  }
+
+  /* Orbits: three hairline rings, each carrying one coloured dot */
+  .orbits {
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    right: var(--gutter);
+    width: min(30rem, 80vw);
+    aspect-ratio: 1;
+    translate: 0 -50%;
+    animation: fade-in 1600ms 400ms ease-out both;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  .orbit {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    border: 1px solid rgba(194, 65, 12, 0.18);
+    border-radius: 50%;
+    animation: turn linear infinite;
+  }
+
+  .orbit i {
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    border-radius: 50%;
+  }
+
+  .o1 {
+    width: 100%;
+    height: 100%;
+    animation-duration: 38s;
+  }
+
+  .o1 i {
+    background: var(--products-ink);
+  }
+
+  .o2 {
+    width: 68%;
+    height: 68%;
+    animation-duration: 26s;
+    animation-direction: reverse;
+  }
+
+  .o2 i {
+    background: var(--research-ink);
+    width: 8px;
+    height: 8px;
+    top: -4px;
+    margin-left: -4px;
+  }
+
+  .o3 {
+    width: 36%;
+    height: 36%;
+    animation-duration: 16s;
+  }
+
+  .o3 i {
+    background: var(--accent);
+    width: 7px;
+    height: 7px;
+    top: -3.5px;
+    margin-left: -3.5px;
+  }
+
+  @keyframes turn {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  /* On phones the orbits sit behind the text, so soften them */
+  @media (max-width: 899.98px) {
+    .orbits {
+      right: -30%;
+      opacity: 0.45;
+    }
+  }
+</style>

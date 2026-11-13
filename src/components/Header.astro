@@ -1,0 +1,208 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/continyum-logo.png';
+import { getProducts, url } from '../lib/content';
+
+// "Soon" tag on Products while nothing is published
+const productsSoon = (await getProducts()).length === 0;
+
+const links = [
+  { href: '/research', label: 'Research', section: 'research' },
+  { href: '/products', label: 'Products', section: 'products' },
+  { href: '/team', label: 'Team', section: 'team' },
+  { href: '/contact', label: 'Contact', section: 'contact' },
+];
+
+const current = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
+const isActive = (href: string) => current === href || current.startsWith(`${href}/`);
+---
+
+<header class="site-header">
+  <div class="container bar">
+    <a class="wordmark" href={url('/')}>
+      <Image
+        src={logo}
+        alt="Continyum"
+        width={176}
+        height={16}
+        densities={[1, 2, 3]}
+        loading="eager"
+        fetchpriority="high"
+      />
+    </a>
+
+    <nav aria-label="Main">
+      <ul class="links desktop">
+        {
+          links.map((l) => (
+            <li data-section={l.section}>
+              <a href={url(l.href)} aria-current={isActive(l.href) ? 'page' : undefined}>
+                {l.label}
+                {l.section === 'products' && productsSoon && <span class="soon">Soon</span>}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <details class="mobile">
+        <summary>Menu</summary>
+        <ul class="links">
+          {
+            links.map((l) => (
+              <li data-section={l.section}>
+                <a href={url(l.href)} aria-current={isActive(l.href) ? 'page' : undefined}>
+                  {l.label}
+                  {l.section === 'products' && productsSoon && <span class="soon">Soon</span>}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </details>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 5;
+    background: transparent; /* lets the home aurora and page blobs show through */
+  }
+
+  .bar {
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .wordmark {
+    display: block;
+    padding-block: var(--s-1);
+  }
+
+  .wordmark img {
+    height: 16px;
+    width: auto;
+    transition: opacity var(--t);
+  }
+
+  .wordmark:hover img {
+    opacity: 0.75;
+  }
+
+  @media (max-width: 639.98px) {
+    .wordmark img {
+      height: 14px;
+    }
+  }
+
+  .links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: var(--s-4);
+    font-size: var(--text-small);
+  }
+
+  /* Underline grows from the left in each section's own colour */
+  .links a {
+    text-decoration: none;
+    background: linear-gradient(var(--ink), var(--ink)) no-repeat left bottom / 0% 2px;
+    padding-bottom: 3px;
+    transition:
+      background-size 300ms var(--ease-out),
+      color var(--t);
+  }
+
+  .links a:hover,
+  .links a[aria-current='page'] {
+    background-size: 100% 2px;
+  }
+
+  .links a[aria-current='page'] {
+    color: var(--ink);
+  }
+
+  /* Tiny pill that marks Products as coming soon */
+  .soon {
+    display: inline-block;
+    margin-left: 0.4em;
+    padding: 0.05em 0.5em;
+    border: 1px solid var(--products-tint);
+    border-radius: 999px;
+    background: #fff6ef;
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.6;
+    vertical-align: 0.15em;
+    color: var(--products-ink);
+  }
+
+
+  .mobile {
+    display: none;
+  }
+
+  .mobile summary {
+    list-style: none;
+    cursor: pointer;
+    font-size: var(--text-small);
+    padding: var(--s-1) 0;
+  }
+
+  .mobile summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile[open] summary {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    text-decoration-color: var(--hairline);
+  }
+
+  .mobile .links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--hairline);
+    padding: var(--s-1) var(--gutter) var(--s-3);
+    font-size: var(--text-base);
+  }
+
+  .mobile .links a {
+    display: inline-block;
+    margin-block: var(--s-1);
+  }
+
+  .mobile[open] .links {
+    animation: menu-in 250ms var(--ease-out) both;
+  }
+
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  @media (max-width: 639.98px) {
+    .desktop {
+      display: none;
+    }
+
+    .mobile {
+      display: block;
+    }
+  }
+</style>

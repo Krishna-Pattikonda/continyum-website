@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import EntryList from '../../components/EntryList.astro';
+import { getHome, getResearch, url } from '../../lib/content';
+
+const home = await getHome();
+const research = await getResearch();
+
+const rows = research.map((r) => ({
+  href: url(`/research/${r.id}`),
+  title: r.data.title,
+  description: r.data.description,
+  status: r.data.status,
+  date: r.data.date,
+}));
+---
+
+<Base title="Research" description={home.sections.research.summary}>
+  <div class="container page">
+    <h1 class="page-title dot">Research</h1>
+    <p class="page-intro">{home.sections.research.summary}</p>
+    <EntryList rows={rows} />
+  </div>
+</Base>

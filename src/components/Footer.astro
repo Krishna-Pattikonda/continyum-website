@@ -1,0 +1,296 @@
+---
+import { Image } from 'astro:assets';
+import logoLight from '../assets/brand/continyum-logo-light.png';
+import { getContact, getHome, getProducts, url } from '../lib/content';
+
+const home = await getHome();
+const contact = await getContact();
+const products = await getProducts();
+const year = new Date().getFullYear();
+
+const company = [
+  { href: '/research', label: 'Research' },
+  { href: '/team', label: 'Team' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<footer class="site-footer">
+  <div class="container top">
+    <div class="brand">
+      <a class="logo" href={url('/')}>
+        <Image src={logoLight} alt="Continyum" width={242} height={22} densities={[1, 2]} />
+      </a>
+      {home.tagline && <p class="tagline">{home.tagline}</p>}
+    </div>
+
+    <nav class="col" aria-labelledby="footer-products">
+      <h2 id="footer-products">Products</h2>
+      <ul>
+        {
+          products.length > 0 ? (
+            products.map((p) => (
+              <li>
+                <a href={url(`/products/${p.id}`)}>{p.data.name}</a>
+              </li>
+            ))
+          ) : (
+            <li>
+              <a class="soon" href={url('/products')}>
+                <span class="soon-dot" aria-hidden="true" />
+                Coming soon
+              </a>
+            </li>
+          )
+        }
+      </ul>
+    </nav>
+
+    <nav class="col" aria-labelledby="footer-company">
+      <h2 id="footer-company">Company</h2>
+      <ul>
+        {
+          company.map((l) => (
+            <li>
+              <a href={url(l.href)}>{l.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="col">
+      <h2>Get in touch</h2>
+      <ul class="touch">
+        <li>
+          <a href={`mailto:${contact.email}`}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"
+              ><rect x="3" y="5" width="18" height="14" rx="1"></rect><path d="m3 7 9 6 9-6"></path></svg
+            >
+            {contact.email}
+          </a>
+        </li>
+        {
+          contact.channels?.map((c) => (
+            <li>
+              <a href={c.url}>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M14 4h6v6" />
+                  <path d="M20 4 10 14" />
+                  <path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
+                </svg>
+                {c.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      {
+        contact.address && (
+          <address>
+            {contact.address.map((line) => (
+              <span>{line}</span>
+            ))}
+          </address>
+        )
+      }
+    </div>
+  </div>
+
+  <div class="container bottom">
+    <p class="copyright">
+      <span>Copyright © {year}</span><Image
+        class="mini"
+        src={logoLight}
+        alt="Continyum"
+        width={110}
+        height={10}
+        densities={[1, 2]}
+      /><span>. All rights reserved.</span>
+    </p>
+    <a class="to-top" href="#main">Back to top <span aria-hidden="true">↑</span></a>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    --f-bg: #0b1220;
+    --f-text: #ffffff;
+    --f-link: #c5ccd8;
+    --f-muted: #8e98a9;
+    --f-line: #1f2a3c;
+
+    background: var(--f-bg);
+    color: var(--f-link);
+    font-size: var(--text-small);
+  }
+
+  /* Four-colour strip — one stripe per section */
+  .site-footer::before {
+    content: '';
+    display: block;
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      var(--research-ink) 0 25%,
+      var(--products-ink) 25% 50%,
+      var(--team-ink) 50% 75%,
+      var(--accent) 75% 100%
+    );
+  }
+
+  .top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-6);
+    padding-block: var(--s-8) var(--s-6);
+  }
+
+  @media (min-width: 640px) {
+    .top {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .top {
+      grid-template-columns: 2fr 1fr 1fr 1.3fr;
+    }
+
+    .brand {
+      grid-column: auto;
+    }
+  }
+
+  .logo {
+    display: inline-block;
+  }
+
+  .logo img {
+    height: 22px;
+    width: auto;
+  }
+
+  .tagline {
+    margin-top: var(--s-3);
+    max-width: 30ch;
+    color: var(--f-link);
+    line-height: 1.6;
+  }
+
+  h2 {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--f-text);
+    margin-bottom: var(--s-3);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  a {
+    color: var(--f-link);
+    text-decoration: none;
+    transition: color var(--t);
+  }
+
+  a:hover {
+    color: var(--f-text);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+  }
+
+  .soon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+  }
+
+  .soon-dot {
+    width: 0.45em;
+    height: 0.45em;
+    border-radius: 50%;
+    background: #fb8a4c;
+  }
+
+  .touch a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+  }
+
+  svg {
+    width: 15px;
+    height: 15px;
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  address {
+    margin-top: var(--s-4);
+    font-style: normal;
+    color: var(--f-muted);
+    line-height: 1.8;
+  }
+
+  address span {
+    display: block;
+  }
+
+  .bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2) var(--s-4);
+    padding-block: var(--s-3) var(--s-4);
+    /* divider aligned with the content, not the container padding */
+    background: linear-gradient(var(--f-line), var(--f-line)) no-repeat top center /
+      calc(100% - 2 * var(--gutter)) 1px;
+    color: var(--f-muted);
+  }
+
+  .copyright {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .mini {
+    height: 10px;
+    width: auto;
+    margin: 0 0.1em 0 0.5em;
+  }
+
+  .to-top {
+    color: var(--f-muted);
+  }
+
+  .to-top span {
+    display: inline-block;
+    transition: transform 300ms var(--ease-out);
+  }
+
+  .to-top:hover span {
+    transform: translateY(-3px);
+  }
+
+  .site-footer :focus-visible {
+    outline-color: #ffffff;
+  }
+</style>

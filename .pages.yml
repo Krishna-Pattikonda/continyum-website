@@ -1,0 +1,273 @@
+# Pages CMS configuration — https://pagescms.org/docs/configuration/
+# Every save in Pages CMS commits to GitHub, which triggers the deploy workflow.
+
+media:
+  input: src/assets/uploads
+  # Content files live two folders below src/ (e.g. src/content/team/),
+  # so image paths are written relative to them. Astro then optimises the images.
+  output: ../../assets/uploads
+  categories: [image]
+
+content:
+  # ---------------------------------------------------------------- Home
+  - name: home
+    label: Home page
+    type: file
+    path: src/content/site/home.yaml
+    format: yaml
+    fields:
+      - name: eyebrow
+        label: Eyebrow (optional)
+        type: string
+        description: The small uppercase line above the headline.
+      - name: headline
+        label: Headline
+        type: string
+        required: true
+        description: The big line at the top of the home page.
+      - name: highlight
+        label: Highlighted phrase (optional)
+        type: string
+        description: Words from the headline to show in italic with a colour underline. Must match the headline exactly. Leave empty for none.
+      - name: subline
+        label: Subline (optional)
+        type: text
+        description: A short line under the headline. Leave empty to hide it.
+      - name: primary_cta
+        label: Main button
+        type: object
+        fields:
+          - { name: label, label: Text, type: string, required: true }
+          - { name: href, label: "Link (a page like /research, or a full https:// address)", type: string, required: true }
+      - name: secondary_cta
+        label: Second link
+        type: object
+        fields:
+          - { name: label, label: Text, type: string, required: true }
+          - { name: href, label: "Link (a page like /contact, or a full https:// address)", type: string, required: true }
+      - name: show_now_researching
+        label: Show "Now researching" ticker
+        type: boolean
+        default: true
+        description: Shows your newest In progress paper at the bottom of the home page.
+      - name: tagline
+        label: Footer tagline
+        type: string
+        description: The line under the logo in the footer.
+      - name: sections
+        label: Page intros
+        description: The sentence under the title on the Research, Products and Team pages.
+        type: object
+        fields:
+          - name: research
+            label: Research
+            type: object
+            fields:
+              - { name: summary, label: Summary, type: text, required: true }
+          - name: products
+            label: Products
+            type: object
+            fields:
+              - { name: summary, label: Summary, type: text, required: true }
+              - name: coming_soon
+                label: Coming soon screen (shown while no product is published)
+                type: object
+                fields:
+                  - { name: headline, label: Headline, type: string, required: true }
+                  - { name: text, label: Text, type: text, required: true }
+                  - { name: button, label: Button label, type: string, required: true }
+          - name: team
+            label: Team
+            type: object
+            fields:
+              - { name: summary, label: Summary, type: text, required: true }
+
+  # ---------------------------------------------------------------- Research
+  - name: research
+    label: Research
+    type: collection
+    path: src/content/research
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      primary: title
+      fields: [title, date, status, draft]
+      sort: date
+      order: desc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: description
+        label: One-line description
+        type: string
+        required: true
+        description: Shown in the list on the Research page.
+      - name: date
+        label: Date
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: status
+        label: Status
+        type: select
+        options:
+          values: [In progress, Published, Preprint]
+      - name: authors
+        label: Authors
+        type: string
+        list: true
+      - name: link
+        label: External link (arXiv, PDF…)
+        type: string
+        description: Full URL starting with https://. Shown as "Read the paper →".
+      - name: draft
+        label: Draft (hidden from the site)
+        type: boolean
+        default: false
+      - name: body
+        label: Body
+        type: rich-text
+        options:
+          format: markdown
+
+  # ---------------------------------------------------------------- Products
+  - name: products
+    label: Products
+    type: collection
+    path: src/content/products
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      primary: name
+      fields: [name, status, order, draft]
+      sort: order
+      order: asc
+    fields:
+      - name: name
+        label: Name
+        type: string
+        required: true
+      - name: description
+        label: One-line description
+        type: string
+        required: true
+      - name: status
+        label: Status
+        type: select
+        required: true
+        default: In development
+        options:
+          values: [Live, Pilot, In development]
+      - name: url
+        label: Website (optional)
+        type: string
+        description: Full URL starting with https://. Shown as "Visit →".
+      - name: order
+        label: Order
+        type: number
+        description: Lower numbers appear first.
+      - name: draft
+        label: Draft (hidden from the site)
+        type: boolean
+        default: false
+      - name: body
+        label: Body
+        type: rich-text
+        options:
+          format: markdown
+
+  # ---------------------------------------------------------------- Team
+  - name: team
+    label: Team
+    type: collection
+    path: src/content/team
+    format: yaml
+    filename: "{primary}.yaml"
+    view:
+      primary: name
+      fields: [name, role, order]
+      sort: order
+      order: asc
+    fields:
+      - name: name
+        label: Name
+        type: string
+        required: true
+      - name: role
+        label: Role
+        type: string
+        required: true
+      - name: bio
+        label: One-line bio
+        type: string
+      - name: photo
+        label: Photo (optional)
+        type: image
+        description: Shown as a circle — a square photo with the face centred works best. Leave empty for no photo.
+      - name: links
+        label: Links
+        type: object
+        list: true
+        fields:
+          - { name: label, label: "Label (e.g. LinkedIn)", type: string, required: true }
+          - { name: url, label: "URL (https://…, mailto:… or tel:…)", type: string, required: true }
+      - name: order
+        label: Order
+        type: number
+        description: Lower numbers appear first.
+
+  # ---------------------------------------------------------------- Contact
+  - name: contact
+    label: Contact page
+    type: file
+    path: src/content/site/contact.yaml
+    format: yaml
+    fields:
+      - name: headline
+        label: Headline
+        type: string
+        description: The big words at the top, e.g. "Let's talk."
+      - name: intro
+        label: Intro
+        type: text
+        required: true
+      - name: email
+        label: Email
+        type: string
+        required: true
+        description: Shown on the Contact page and in the footer.
+      - name: topics
+        label: Topic buttons
+        description: Each button opens an email to you with this subject already filled in.
+        type: object
+        list: true
+        fields:
+          - { name: label, label: Button text, type: string, required: true }
+          - { name: subject, label: Email subject, type: string, required: true }
+      - name: address
+        label: Address lines
+        type: string
+        list: true
+        description: One line per entry. Shown on the Contact page and in the footer.
+      - name: location
+        label: Map panel
+        type: object
+        fields:
+          - { name: coordinates, label: "Coordinates (text, e.g. 17.69° N, 83.22° E)", type: string }
+          - { name: timezone, label: Time zone, type: string }
+          - { name: map_url, label: Google Maps link, type: string }
+      - name: greetings
+        label: Scrolling greetings
+        type: string
+        list: true
+        description: The large words scrolling across the bottom of the page.
+      - name: channels
+        label: Other channels
+        type: object
+        list: true
+        fields:
+          - { name: label, label: "Label (e.g. LinkedIn)", type: string, required: true }
+          - { name: url, label: URL, type: string, required: true }

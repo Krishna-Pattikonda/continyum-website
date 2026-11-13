@@ -1,0 +1,36 @@
+headline: Let's talk.
+intro: Exploring AI for your organisation, curious about our research, or building something hard? Write to us. We read every message.
+email: office@continyum.in
+# Quick-start buttons. Each opens an email with the subject already filled in.
+topics:
+  - label: Partnerships
+    subject: Partnership enquiry
+  - label: Enterprise AI
+    subject: Enterprise AI enquiry
+  - label: Research collaboration
+    subject: Research collaboration
+  - label: Product early access
+    subject: Product early access
+  - label: Press
+    subject: Press enquiry
+  - label: Just saying hello
+    subject: Hello from the website
+address:
+  - Lansum Greens, Murali Nagar
+  - Visakhapatnam, Andhra Pradesh
+  - India
+location:
+  coordinates: 17.69° N, 83.22° E
+  timezone: IST · UTC+5:30
+  map_url: https://www.google.com/maps/search/?api=1&query=Lansum+Greens+Murali+Nagar+Visakhapatnam
+# Greetings that scroll across the bottom of the contact page.
+greetings:
+  - Hello
+  - నమస్కారం
+  - नमस्ते
+  - Bonjour
+  - Hola
+  - こんにちは
+  - Ciao
+  - Hallo
+channels: []

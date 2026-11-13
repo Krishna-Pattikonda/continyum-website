@@ -1,0 +1,139 @@
+---
+import { formatDate, isoDate } from '../lib/content';
+
+export interface Row {
+  href: string;
+  title: string;
+  description: string;
+  status?: string;
+  date?: Date;
+}
+
+interface Props {
+  rows: Row[];
+}
+
+const { rows } = Astro.props;
+const hasDates = rows.some((r) => r.date);
+---
+
+<ul class:list={['list', { dated: hasDates }]}>
+  {
+    rows.map((r) => (
+      <li class="reveal">
+        <a href={r.href}>
+          {r.date && (
+            <time class="date tabular" datetime={isoDate(r.date)}>
+              {formatDate(r.date)}
+            </time>
+          )}
+          <span class="body">
+            <span class="title">{r.title}</span>
+            <span class="desc">{r.description}</span>
+          </span>
+          {r.status && (
+            <span class="status" data-status={r.status}>
+              {r.status}
+            </span>
+          )}
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .list {
+    list-style: none;
+    padding: 0;
+    margin: var(--s-8) 0 0;
+    border-top: 1px solid var(--hairline);
+  }
+
+  li {
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  a {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--s-1) var(--s-4);
+    padding: var(--s-3) var(--s-2);
+    margin-inline: calc(-1 * var(--s-2));
+    text-decoration: none;
+    transition: background-color var(--t);
+  }
+
+  /* Colour bar + wash on hover */
+  a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: var(--s-3);
+    bottom: var(--s-3);
+    width: 3px;
+    background: var(--ink);
+    transform: scaleY(0);
+    transition: transform 250ms var(--ease-out);
+  }
+
+  a:hover {
+    background: var(--wash);
+  }
+
+  a:hover::before {
+    transform: scaleY(1);
+  }
+
+  .dated a {
+    grid-template-columns: 8rem 1fr auto;
+  }
+
+  .date,
+  .desc {
+    color: var(--muted);
+  }
+
+  .date,
+  .status,
+  .desc {
+    font-size: var(--text-small);
+  }
+
+  .date {
+    padding-top: 0.15em;
+  }
+
+  .title {
+    display: block;
+    font-weight: 500;
+    transition: color var(--t);
+  }
+
+  a:hover .title {
+    color: var(--ink);
+  }
+
+  .desc {
+    display: block;
+    max-width: var(--measure);
+  }
+
+  .status {
+    align-self: start;
+    padding-top: 0.15em;
+  }
+
+  @media (max-width: 639.98px) {
+    a,
+    .dated a {
+      grid-template-columns: 1fr;
+      gap: var(--s-1);
+    }
+
+    .date {
+      order: -1;
+    }
+  }
+</style>

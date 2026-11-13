@@ -1,0 +1,12 @@
+name: Krishna Pattikonda
+role: Founder & CEO
+bio: ""
+photo: ../../assets/uploads/krishna-pattikonda.png
+links:
+  - label: krishna@continyum.in
+    url: mailto:krishna@continyum.in
+  - label: +91 78968 46390
+    url: tel:+917896846390
+  - label: LinkedIn
+    url: https://www.linkedin.com/in/krishnapattikonda/
+order: 1
