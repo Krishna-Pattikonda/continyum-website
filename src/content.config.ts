@@ -164,4 +164,15 @@ const demos = defineCollection({
     }),
 });
 
-export const collections = { home, contact, research, products, team, demos };
+/* Legal pages (e.g. the privacy policy): title, dates, Markdown body. */
+const legal = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/legal' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    effective: z.coerce.date(),
+    updated: z.coerce.date(),
+  }),
+});
+
+export const collections = { home, contact, research, products, team, demos, legal };

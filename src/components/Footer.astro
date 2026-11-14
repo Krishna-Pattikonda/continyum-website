@@ -116,7 +116,10 @@ const company = [
         densities={[1, 2]}
       /><span>. All rights reserved.</span>
     </p>
-    <a class="to-top" href="#main">Back to top <span aria-hidden="true">↑</span></a>
+    <p class="bottom-links">
+      <a class="legal-link" href={url('/privacy')}>Privacy Policy</a>
+      <a class="to-top" href="#main">Back to top <span aria-hidden="true">↑</span></a>
+    </p>
   </div>
 </footer>
 
@@ -285,7 +288,14 @@ const company = [
     margin: 0 0.1em 0 0.5em;
   }
 
-  .to-top {
+  .bottom-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-1) var(--s-4);
+  }
+
+  .to-top,
+  .legal-link {
     color: var(--f-muted);
   }
 

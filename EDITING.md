@@ -129,6 +129,12 @@ The footer builds itself:
 
 ---
 
+## Update the privacy policy
+
+Click **Privacy policy**. Edit the text, then change **Last updated** to today's date and click **Save**. The policy is at `continyum.in/privacy` and is linked from the footer of every page. Each main heading (the numbered sections) automatically appears in the **Contents** list beside the policy.
+
+---
+
 ## Hide something (draft)
 
 Research and Products entries have a **Draft** checkbox.

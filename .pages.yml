@@ -323,6 +323,41 @@ content:
         default: true
         description: Untick to list this person on the Team page only, not under "Talk to a founder" on the Contact page.
 
+  # ---------------------------------------------------------------- Privacy policy
+  - name: privacy
+    label: Privacy policy
+    type: file
+    path: src/content/legal/privacy.md
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: description
+        label: Description (for search engines)
+        type: string
+        required: true
+      - name: effective
+        label: Effective date
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: updated
+        label: Last updated
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+        description: Change this whenever you edit the policy.
+      - name: body
+        label: Policy text
+        type: rich-text
+        options:
+          format: markdown
+        description: Each "## heading" becomes an entry in the Contents list beside the policy.
+
   # ---------------------------------------------------------------- Contact
   - name: contact
     label: Contact page

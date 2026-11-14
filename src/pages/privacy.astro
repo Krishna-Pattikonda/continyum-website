@@ -1,0 +1,174 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { formatDate, isoDate } from '../lib/content';
+
+const entry = await getEntry('legal', 'privacy');
+if (!entry) throw new Error('Missing src/content/legal/privacy.md');
+
+const { title, description, effective, updated } = entry.data;
+const { Content, headings } = await render(entry);
+const sections = headings.filter((h) => h.depth === 2);
+---
+
+<Base title={title} description={description}>
+  <div class="container page legal">
+    <h1 class="page-title dot">{title}</h1>
+    <p class="dates">
+      <span>Effective <time datetime={isoDate(effective)}>{formatDate(effective)}</time></span>
+      <span aria-hidden="true">·</span>
+      <span>Last updated <time datetime={isoDate(updated)}>{formatDate(updated)}</time></span>
+    </p>
+
+    <div class="layout">
+      <nav class="toc" aria-label="Contents">
+        <details class="toc-mobile">
+          <summary>Contents</summary>
+          <ol>
+            {
+              sections.map((s) => (
+                <li>
+                  <a href={`#${s.slug}`}>{s.text}</a>
+                </li>
+              ))
+            }
+          </ol>
+        </details>
+
+        <div class="toc-desktop">
+          <p class="toc-label">Contents</p>
+          <ol>
+            {
+              sections.map((s) => (
+                <li>
+                  <a href={`#${s.slug}`}>{s.text}</a>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </nav>
+
+      <article class="prose policy">
+        <Content />
+      </article>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .dates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.6em;
+    margin-top: var(--s-3);
+    font-size: var(--text-small);
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-5);
+    margin-top: var(--s-8);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--hairline);
+  }
+
+  @media (min-width: 960px) {
+    .layout {
+      grid-template-columns: 15rem minmax(0, 1fr);
+      gap: var(--s-8);
+    }
+  }
+
+  /* ---------- Contents ---------- */
+
+  .toc ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.45rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  .toc a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color var(--t);
+  }
+
+  .toc a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+  }
+
+  .toc-label {
+    margin-bottom: var(--s-2);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .toc-desktop {
+    display: none;
+  }
+
+  .toc-mobile {
+    border: 1px solid var(--hairline);
+    padding: var(--s-2) var(--s-3);
+  }
+
+  .toc-mobile summary {
+    cursor: pointer;
+    font-size: var(--text-small);
+    font-weight: 500;
+  }
+
+  .toc-mobile[open] ol {
+    margin-top: var(--s-2);
+  }
+
+  @media (min-width: 960px) {
+    .toc-mobile {
+      display: none;
+    }
+
+    .toc-desktop {
+      display: block;
+      position: sticky;
+      top: var(--s-4);
+      max-height: calc(100vh - var(--s-8));
+      overflow-y: auto;
+    }
+  }
+
+  /* ---------- Policy text ---------- */
+
+  .policy :global(h2) {
+    scroll-margin-top: var(--s-4);
+  }
+
+  .policy :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .policy :global(h3) {
+    font-size: 1.1875rem;
+  }
+
+  .policy :global(p),
+  .policy :global(li) {
+    color: #2a2a2a;
+  }
+
+  .policy :global(hr) {
+    margin-block: var(--s-8) var(--s-4);
+  }
+</style>
