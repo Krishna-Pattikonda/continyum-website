@@ -33,10 +33,10 @@ const now = home.show_now_researching
   ? (await getResearch()).find((r) => r.data.status === 'In progress')
   : undefined;
 
-const description = home.subline || home.headline;
+const description = home.seo?.home || home.subline || home.headline;
 ---
 
-<Base description={description} demos={featured.length > 0}>
+<Base seoTitle={home.seo?.home_title} description={description} demos={featured.length > 0}>
   <section class="hero" aria-labelledby="headline" style={`--words: ${wordCount}`}>
     <div class="aurora" aria-hidden="true">
       <span class="blob b1"></span>

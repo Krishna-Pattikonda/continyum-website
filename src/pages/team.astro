@@ -3,12 +3,13 @@ import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import LinkIcon from '../components/LinkIcon.astro';
 import { getHome, getTeam } from '../lib/content';
+import { people } from '../lib/seo';
 
 const home = await getHome();
 const team = await getTeam();
 ---
 
-<Base title="Team" description={home.sections.team.summary}>
+<Base title="Team" seoTitle="Team & Founders — Continyum" description={home.seo?.team || home.sections.team.summary} jsonLd={await people()}>
   <div class="container page">
     <h1 class="page-title dot">Team</h1>
     <p class="page-intro">{home.sections.team.summary}</p>

@@ -4,6 +4,7 @@ import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import EntryMeta from '../../components/EntryMeta.astro';
 import { formatDate, getResearch, isoDate, url, type Research } from '../../lib/content';
+import { ORG_ID } from '../../lib/seo';
 
 export const getStaticPaths = (async () => {
   const research = await getResearch();
@@ -17,9 +18,22 @@ interface Props {
 const { entry } = Astro.props;
 const { title, description, date, status, authors, link } = entry.data;
 const { Content } = await render(entry);
+
+const article = {
+  '@type': 'ScholarlyArticle',
+  headline: title.length > 110 ? title.slice(0, 107) + '…' : title,
+  name: title,
+  description,
+  datePublished: isoDate(date),
+  inLanguage: 'en',
+  url: new URL(url(`/research/${entry.id}/`), Astro.site).href,
+  author: authors?.length ? authors.map((name) => ({ '@type': 'Person', name })) : { '@id': ORG_ID() },
+  publisher: { '@id': ORG_ID() },
+  ...(link ? { sameAs: link } : {}),
+};
 ---
 
-<Base title={title} description={description} type="article">
+<Base title={title} description={description} type="article" jsonLd={[article]}>
   <article class="container page">
     <a class="text-link back-link" href={url('/research')}>
       <span class="arrow back" aria-hidden="true">←</span>All research

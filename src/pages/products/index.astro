@@ -25,7 +25,7 @@ const endsWithDot = soon.headline.endsWith('.');
 const notify = `mailto:${contact.email}?subject=${encodeURIComponent('Notify me about Continyum products')}`;
 ---
 
-<Base title="Products" description={home.sections.products.summary} demos={demos.length > 0}>
+<Base title="Products" seoTitle="AI Products & Demos — Continyum" description={home.seo?.products || home.sections.products.summary} demos={demos.length > 0}>
   <div class="container page head">
     <h1 class="page-title dot">Products</h1>
     <p class="page-intro">{home.sections.products.summary}</p>

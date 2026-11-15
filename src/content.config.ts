@@ -63,6 +63,17 @@ const home = defineCollection({
         link_label: z.string(),
       }),
     ),
+    // Search engine titles/descriptions. Anything left empty falls back to the page's own text.
+    seo: optional(
+      z.object({
+        home_title: optional(z.string()),
+        home: optional(z.string()),
+        research: optional(z.string()),
+        products: optional(z.string()),
+        team: optional(z.string()),
+        contact: optional(z.string()),
+      }),
+    ),
     sections: z.object({
       research: z.object({ summary: z.string() }),
       products: z.object({

@@ -10,18 +10,23 @@ import sansMediumFont from '../assets/fonts/inter-latin-500-normal.woff2?url';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { url } from '../lib/content';
+import { organization, people, website } from '../lib/seo';
 
 interface Props {
   title?: string;
+  /** Use this exact <title> instead of "{title} — Continyum". */
+  seoTitle?: string;
   description: string;
+  /** Extra schema.org objects for this page (merged into one JSON-LD graph). */
+  jsonLd?: Record<string, unknown>[];
   type?: 'website' | 'article';
   noindex?: boolean;
   /** Page shows demo illustrations: hold them paused from the first frame until they scroll into view. */
   demos?: boolean;
 }
 
-const { title, description, type = 'website', noindex = false, demos = false } = Astro.props;
-const fullTitle = title ? `${title} — Continyum` : 'Continyum';
+const { title, seoTitle, description, type = 'website', noindex = false, demos = false, jsonLd = [] } = Astro.props;
+const fullTitle = seoTitle || (title ? `${title} — Continyum` : 'Continyum');
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(url('/og-image.png'), Astro.site).href;
 
@@ -29,6 +34,37 @@ const ogImage = new URL(url('/og-image.png'), Astro.site).href;
 const path = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '');
 const section = ['research', 'products', 'team', 'contact'].find((s) => path.startsWith(`/${s}`));
 const isHome = path === '/' || path === '';
+
+// One JSON-LD graph per page: who we are (home), plus breadcrumbs (Home › Section › Page).
+const sectionNames: Record<string, string> = {
+  research: 'Research',
+  products: 'Products',
+  team: 'Team',
+  contact: 'Contact',
+  privacy: 'Privacy Policy',
+};
+const parts = path.split('/').filter(Boolean);
+const crumbs = [{ name: 'Home', path: '/' }];
+if (parts[0] && sectionNames[parts[0]]) crumbs.push({ name: sectionNames[parts[0]], path: `/${parts[0]}/` });
+if (parts.length > 1 && title) crumbs.push({ name: title, path });
+const breadcrumbs =
+  crumbs.length > 1
+    ? [
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: crumbs.map((c, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: c.name,
+            item: new URL(url(c.path), Astro.site).href,
+          })),
+        },
+      ]
+    : [];
+const graph = noindex ? [] : [...(isHome ? [await organization(), website(), ...(await people())] : []), ...breadcrumbs, ...jsonLd];
+const ld = graph.length
+  ? JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c')
+  : '';
 ---
 
 <!doctype html>
@@ -62,7 +98,7 @@ const isHome = path === '/' || path === '';
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content="en_IN" />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -71,6 +107,7 @@ const isHome = path === '/' || path === '';
     <meta name="twitter:image" content={ogImage} />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
+    {ld && <script type="application/ld+json" set:html={ld} />}
   </head>
   <body data-section={section}>
     <a class="skip-link" href="#main">Skip to content</a>

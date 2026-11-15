@@ -15,7 +15,7 @@ const rows = research.map((r) => ({
 }));
 ---
 
-<Base title="Research" description={home.sections.research.summary}>
+<Base title="Research" seoTitle="AI Research — Continyum" description={home.seo?.research || home.sections.research.summary}>
   <div class="container page">
     <h1 class="page-title dot">Research</h1>
     <p class="page-intro">{home.sections.research.summary}</p>

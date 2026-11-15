@@ -2,7 +2,10 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import LinkIcon from '../components/LinkIcon.astro';
-import { getContact, getTeam } from '../lib/content';
+import { getContact, getHome, getTeam } from '../lib/content';
+import { organization } from '../lib/seo';
+
+const home = await getHome();
 
 const contact = await getContact();
 const team = (await getTeam()).filter((p) => p.data.links?.length && p.data.show_on_contact !== false);
@@ -18,7 +21,7 @@ const mailto = (subject?: string) =>
 const greetings = contact.greetings ?? [];
 ---
 
-<Base title="Contact" description={contact.intro}>
+<Base title="Contact" seoTitle="Contact Continyum — Enterprise AI, Visakhapatnam" description={home.seo?.contact || contact.intro} jsonLd={[await organization()]}>
   <div class="contact">
     <!-- ---------- Intro ---------- -->
     <section class="container intro" aria-labelledby="contact-title">

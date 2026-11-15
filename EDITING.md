@@ -30,6 +30,8 @@ Click **Save** when you're done.
 
 The **Page intros** on the same screen are the sentence shown under the title on the Research, Products and Team pages.
 
+**Google search text** (same screen) is the title and description Google shows for each page in search results. Keep titles under about 60 characters and descriptions under about 155. Use the words people actually search for, like "enterprise AI", "AI agents" or "Visakhapatnam". Research papers, demos and products use their own title and one-line description, so write those with search in mind too.
+
 ---
 
 ## Add a research paper

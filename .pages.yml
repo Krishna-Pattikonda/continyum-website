@@ -64,6 +64,17 @@ content:
           - { name: text, label: Intro, type: text, required: true }
           - { name: note, label: Honesty note (shown under the demos), type: text, required: true }
           - { name: link_label, label: '"See all" link text', type: string, required: true }
+      - name: seo
+        label: Google search text
+        description: What Google shows for each page. Titles under about 60 characters, descriptions under about 155. Leave one empty to use the page's own intro.
+        type: object
+        fields:
+          - { name: home_title, label: Home page title, type: string }
+          - { name: home, label: Home page description, type: text }
+          - { name: research, label: Research description, type: text }
+          - { name: products, label: Products description, type: text }
+          - { name: team, label: Team description, type: text }
+          - { name: contact, label: Contact description, type: text }
       - name: sections
         label: Page intros
         description: The sentence under the title on the Research, Products and Team pages.

@@ -32,3 +32,11 @@ sections:
       button: Get notified
   team:
     summary: We’re early, and we like it that way. It’s a founding team that is close to the work, the customers and the problems worth solving.
+# What Google shows in search results. Keep titles under ~60 characters and descriptions under ~155.
+seo:
+  home_title: Continyum — Enterprise AI Company in Visakhapatnam, India
+  home: Continyum is an enterprise AI and frontier technology company in Visakhapatnam (Vizag), India, researching reliable AI agents and building AI products.
+  research: AI research from Continyum on reliable large language model (LLM) agents, tool use and adaptive failure recovery, from our team in Visakhapatnam.
+  products: AI products and demos from Continyum for e-commerce and enterprise teams, including RTO and COD risk prediction, voice agents and an AI CFO.
+  team: Meet the Continyum team building enterprise AI in Visakhapatnam, India, led by founder and CEO Krishna Pattikonda and co-founder and COO Rishith Dandu.
+  contact: Contact Continyum about enterprise AI, partnerships, research collaboration or early product access. Email office@continyum.in. Based in Visakhapatnam.
