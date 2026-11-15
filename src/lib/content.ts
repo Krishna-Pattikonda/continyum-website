@@ -20,7 +20,12 @@ export async function getFeaturedDemos(limit = 3): Promise<Demo[]> {
 /** Prefix an internal path with the site's base path (needed for GitHub Pages project sites). */
 export function url(path: string): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-  return `${base}${path.startsWith('/') ? path : `/${path}`}`;
+  const full = path.startsWith('/') ? path : `/${path}`;
+  // Page links end in "/" (GitHub Pages redirects "/team" to "/team/"), so
+  // nobody, Google included, has to follow a redirect. Files (".xml") are left alone.
+  const [, pathname, rest = ''] = full.match(/^([^?#]*)(.*)$/)!;
+  const needsSlash = !pathname.endsWith('/') && !/\.[a-z0-9]+$/i.test(pathname);
+  return `${base}${pathname}${needsSlash ? '/' : ''}${rest}`;
 }
 
 /** A link typed in the CMS: internal paths ("/research") get the base path, full URLs pass through. */
