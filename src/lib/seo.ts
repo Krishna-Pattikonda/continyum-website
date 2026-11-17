@@ -24,7 +24,10 @@ export async function people() {
 export async function organization() {
   const contact = await getContact();
   const team = await people();
-  const founders = team.filter((p) => /founder/i.test(p.jobTitle));
+  const founderIds = new Set(
+    (await getTeam()).filter((p) => p.data.founder).map((p) => abs('/team/') + '#' + p.id),
+  );
+  const founders = team.filter((p) => founderIds.has(p['@id']));
   const lines = contact.address ?? [];
   return {
     '@type': 'Organization',

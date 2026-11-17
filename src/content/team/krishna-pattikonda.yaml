@@ -1,5 +1,5 @@
 name: Krishna Pattikonda
-role: Founder & CEO
+role: Chief Executive Officer
 bio: ""
 photo: ../../assets/uploads/krishna-pattikonda.png
 links:
@@ -10,3 +10,4 @@ links:
   - label: LinkedIn
     url: https://www.linkedin.com/in/krishnapattikonda/
 order: 1
+founder: true

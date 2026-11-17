@@ -1,5 +1,5 @@
 name: Rishith Dandu
-role: Co-Founder & COO
+role: Chief Operating Officer
 bio: ""
 photo: ../../assets/uploads/rishith-dandu.png
 links:
@@ -10,3 +10,4 @@ links:
   - label: LinkedIn
     url: https://www.linkedin.com/in/rishith-dandu-631346428/
 order: 2
+founder: true

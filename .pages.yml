@@ -333,6 +333,11 @@ content:
         type: boolean
         default: true
         description: Untick to list this person on the Team page only, not under "Talk to a founder" on the Contact page.
+      - name: founder
+        label: Founder
+        type: boolean
+        default: false
+        description: Tells Google this person founded Continyum. Not shown on the page.
 
   # ---------------------------------------------------------------- Privacy policy
   - name: privacy

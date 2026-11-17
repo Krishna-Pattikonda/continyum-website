@@ -149,6 +149,8 @@ const team = defineCollection({
       order: optional(z.coerce.number()),
       // false = listed on the Team page only, not under "Talk to a founder" on Contact
       show_on_contact: optional(z.boolean()),
+      // Listed as a founder of Continyum in the data Google reads (not shown on the page)
+      founder: optional(z.boolean()),
     }),
 });
 
